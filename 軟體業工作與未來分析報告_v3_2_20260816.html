@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台灣純軟體業工作與就學進修分析報告 v3.1</title>
+<style>
+/* ══════════════════════════════════
+   設計令牌
+══════════════════════════════════ */
+:root {
+  --brand:    #2563eb;
+  --brand-d:  #1d4ed8;
+  --accent:   #06b6d4;
+  --ok:       #059669;
+  --ok-bg:    #d1fae5;
+  --warn:     #d97706;
+  --warn-bg:  #fef3c7;
+  --info-bg:  #eff6ff;
+  --ink:      #0f172a;
+  --sub:      #334155;
+  --muted:    #64748b;
+  --line:     #e2e8f0;
+  --soft:     #f1f5f9;
+  --bg:       #f8fafc;
+  --card:     #ffffff;
+  --nav-h:    52px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Segoe UI","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+  color: var(--ink); background: var(--bg);
+  line-height: 1.75; font-size: 16px;
+  overflow-x: clip;
+}
+a { color: var(--brand); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ══════════════════════════════════
+   進度條
+══════════════════════════════════ */
+#progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0;
+  background: linear-gradient(90deg, var(--brand), var(--accent));
+  z-index: 300; transition: width .08s linear;
+}
+
+/* ══════════════════════════════════
+   頂部 Sticky Nav
+══════════════════════════════════ */
+#topnav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  height: var(--nav-h);
+  display: flex; align-items: center;
+  padding: 0 24px;
+  gap: 6px;
+  transform: translateY(-100%);
+  transition: transform .25s ease;
+}
+#topnav.visible { transform: translateY(0); }
+#topnav .nav-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 999px;
+  font-size: 13px; color: var(--muted);
+  border: 1px solid transparent;
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+  background: none; font-family: inherit;
+  text-decoration: none;
+}
+#topnav .nav-pill:hover { color: var(--brand); background: #eff6ff; }
+#topnav .nav-pill.active {
+  color: var(--brand); background: #eff6ff;
+  border-color: #bfdbfe;
+  font-weight: 600;
+}
+#topnav .nav-pill .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--muted); flex-shrink: 0; transition: background .15s;
+}
+#topnav .nav-pill.active .dot { background: var(--brand); }
+#topnav .nav-sep { width: 1px; height: 16px; background: var(--line); flex-shrink: 0; }
+
+/* ══════════════════════════════════
+   Hero Header
+══════════════════════════════════ */
+header {
+  background: linear-gradient(140deg, #0f2661 0%, #1d4ed8 45%, #0891b2 100%);
+  color: #fff; padding: 72px 24px 64px;
+  position: relative; overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 80% 50%, rgba(6,182,212,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(99,102,241,.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+header::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='1'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+header .inner {
+  max-width: 900px; margin: 0 auto;
+  position: relative; z-index: 1;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+  padding: 4px 14px; border-radius: 999px;
+  font-size: 13px; letter-spacing: .5px; margin-bottom: 20px;
+}
+.hero-badge::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: #34d399; flex-shrink: 0;
+}
+header h1 {
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight: 800; line-height: 1.3; margin-bottom: 14px;
+}
+header p { font-size: 16px; opacity: .88; max-width: 560px; }
+
+/* ══════════════════════════════════
+   容器
+══════════════════════════════════ */
+.container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+/* ══════════════════════════════════
+   目錄卡片（內嵌，非 sidebar）
+══════════════════════════════════ */
+.toc-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin: -32px auto 52px;
+  box-shadow: 0 12px 40px rgba(15,23,42,.08);
+  position: relative; z-index: 2;
+}
+.toc-card h2 {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+}
+.toc-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  color: var(--sub); font-size: 14px;
+  border: 1px solid transparent;
+  transition: all .15s;
+  text-decoration: none;
+}
+.toc-item:hover { background: #eff6ff; color: var(--brand); border-color: #bfdbfe; text-decoration: none; }
+.toc-num {
+  width: 24px; height: 24px; border-radius: 7px;
+  background: var(--soft); color: var(--muted);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+  transition: all .15s;
+}
+.toc-item:hover .toc-num { background: var(--brand); color: #fff; }
+
+/* ══════════════════════════════════
+   章節
+══════════════════════════════════ */
+section { margin-bottom: 64px; scroll-margin-top: calc(var(--nav-h) + 16px); }
+
+.sec-header {
+  position: relative;
+  margin-bottom: 28px;
+  padding: 28px 28px 24px;
+  background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 60%, #f8fafc 100%);
+  border: 1px solid #bfdbfe;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.sec-header::before {
+  content: attr(data-num);
+  position: absolute;
+  right: -8px; top: -16px;
+  font-size: 120px; font-weight: 900;
+  color: rgba(37,99,235,.06);
+  line-height: 1; letter-spacing: -4px;
+  pointer-events: none; user-select: none;
+  font-family: inherit;
+}
+.sec-header-inner {
+  display: flex; align-items: center; gap: 16px;
+  position: relative; z-index: 1;
+}
+.sec-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px; border-radius: 14px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 16px; font-weight: 800;
+  flex-shrink: 0; letter-spacing: 0;
+  box-shadow: 0 4px 12px rgba(37,99,235,.3);
+}
+.sec-title { flex: 1; }
+.sec-title h2 { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.3; }
+.sec-title p  { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+h3 { font-size: 17px; font-weight: 700; color: var(--brand-d); margin: 32px 0 12px; }
+
+/* ══════════════════════════════════
+   Card
+══════════════════════════════════ */
+.card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 12px; padding: 20px 24px; margin: 14px 0;
+  transition: box-shadow .2s, transform .2s;
+}
+.card:hover { box-shadow: 0 8px 28px rgba(37,99,235,.08); transform: translateY(-1px); }
+
+/* ══════════════════════════════════
+   Callout
+══════════════════════════════════ */
+.callout {
+  border-radius: 12px; padding: 16px 20px; margin: 20px 0;
+  font-size: 15px; display: flex; gap: 12px; align-items: flex-start;
+}
+.callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: flex-start; }
+.callout.tip  { background: var(--ok-bg);   border-left: 4px solid var(--ok);   color: #065f46; }
+.callout.warn { background: var(--warn-bg); border-left: 4px solid var(--warn); color: #92400e; }
+.callout.info { background: var(--info-bg); border-left: 4px solid var(--brand); color: #1e40af; }
+
+/* ══════════════════════════════════
+   全寬 Breakout（Diagram）
+══════════════════════════════════ */
+.full-bleed {
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  margin-top: 16px; margin-bottom: 16px;
+}
+.diagram-shell {
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 24px 0;
+  overflow-x: auto;
+}
+.diagram-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* ══════════════════════════════════
+   Table
+══════════════════════════════════ */
+.table-wrap { overflow-x: auto; margin: 14px 0; border-radius: 12px; border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+thead th {
+  background: var(--brand); color: #fff;
+  text-align: left; padding: 12px 16px;
+  font-weight: 600; white-space: nowrap; font-size: 14px;
+}
+thead th:first-child { border-radius: 11px 0 0 0; }
+thead th:last-child  { border-radius: 0 11px 0 0; }
+tbody td { padding: 11px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+#role-table td { white-space: nowrap; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--soft); }
+tbody tr { cursor: pointer; transition: background .12s; }
+tbody tr:hover { background: #dbeafe; }
+tbody tr.active { background: #bfdbfe !important; outline: 2px solid var(--brand); outline-offset: -2px; }
+
+/* ══════════════════════════════════
+   語言篩選
+══════════════════════════════════ */
+.filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 8px; }
+.filter-btn {
+  background: var(--soft); border: 1px solid var(--line);
+  border-radius: 999px; padding: 6px 16px; font-size: 13px;
+  color: var(--muted); cursor: pointer; transition: all .15s;
+  font-family: inherit;
+}
+.filter-btn:hover { border-color: var(--brand); color: var(--brand); }
+.filter-btn.on { background: var(--brand); color: #fff; border-color: var(--brand); }
+.lang-row.hidden { display: none; }
+
+/* ══════════════════════════════════
+   Skill Cards
+══════════════════════════════════ */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+  gap: 12px; margin: 14px 0;
+}
+.skill-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 12px; padding: 16px 18px;
+  display: flex; flex-direction: column;
+  transition: box-shadow .2s, transform .2s;
+}
+.skill-card:hover { box-shadow: 0 6px 20px rgba(37,99,235,.1); transform: translateY(-2px); }
+.skill-card h4 { font-size: 15px; font-weight: 700; color: var(--brand-d); margin-bottom: 6px; }
+.skill-card p  { font-size: 14px; color: var(--muted); flex: 1; }
+.skill-card .links { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.skill-card .links a { display: block; font-size: 13px; color: var(--brand); margin: 3px 0; }
+.skill-card .links a::before { content: "→ "; opacity: .5; }
+
+/* ══════════════════════════════════
+   Q&A Accordion
+══════════════════════════════════ */
+.qa-list { list-style: none; margin: 12px 0; }
+.qa-item {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 12px; margin: 8px 0; overflow: hidden;
+  transition: box-shadow .2s;
+}
+.qa-item:hover { box-shadow: 0 4px 16px rgba(15,23,42,.07); }
+.qa-q {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px; cursor: pointer;
+  transition: background .12s; user-select: none;
+}
+.qa-q:hover { background: #f8fafc; }
+.qa-item.open > .qa-q { background: #eff6ff; border-bottom: 1px solid #bfdbfe; }
+.qa-badge {
+  flex-shrink: 0; width: 22px; height: 22px; border-radius: 6px;
+  background: var(--accent); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; margin-top: 2px;
+}
+.qa-text { flex: 1; font-size: 15px; font-weight: 600; line-height: 1.5; }
+.qa-arrow {
+  flex-shrink: 0; margin-top: 4px; color: var(--muted);
+  transition: transform .25s, color .15s;
+}
+.qa-item.open .qa-arrow { transform: rotate(180deg); color: var(--brand); }
+.qa-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .32s ease, padding .3s ease;
+  font-size: 15px; color: var(--sub); line-height: 1.7;
+  padding: 0 16px 0 50px;
+}
+.qa-item.open .qa-body { max-height: 500px; padding: 12px 20px 16px 50px; }
+
+/* ══════════════════════════════════
+   Principle Tiles
+══════════════════════════════════ */
+.principles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin: 20px 0;
+}
+.principle {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 14px; padding: 24px 20px;
+  position: relative; overflow: hidden;
+  transition: box-shadow .2s, transform .2s;
+}
+.principle:hover { box-shadow: 0 8px 28px rgba(37,99,235,.1); transform: translateY(-2px); }
+.principle::before {
+  content: attr(data-n);
+  position: absolute; right: 12px; top: 8px;
+  font-size: 64px; font-weight: 900; color: var(--soft);
+  line-height: 1; pointer-events: none;
+}
+.principle h4 { font-size: 16px; font-weight: 800; color: var(--brand-d); margin-bottom: 8px; }
+.principle p  { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ══════════════════════════════════
+   Pill
+══════════════════════════════════ */
+.pill {
+  display: inline-block; background: var(--soft);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 4px 12px; font-size: 14px;
+  color: var(--sub); margin: 3px 4px 3px 0;
+}
+
+/* ══════════════════════════════════
+   Footer
+══════════════════════════════════ */
+footer {
+  background: #0f172a; color: #94a3b8;
+  padding: 40px 24px; margin-top: 64px;
+}
+footer .inner { max-width: 900px; margin: 0 auto; }
+footer h3 { color: #fff; font-size: 15px; margin-bottom: 10px; }
+footer .meta { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 14px; }
+footer .meta b { color: #fff; }
+footer .disc { margin-top: 16px; font-size: 13px; line-height: 1.6; color: #475569; }
+footer code { font-size: 12px; color: #64748b; }
+
+/* ══════════════════════════════════
+   Responsive
+══════════════════════════════════ */
+@media (max-width: 700px) {
+  header { padding: 48px 20px 44px; }
+  header h1 { font-size: 22px; }
+  .toc-grid { grid-template-columns: 1fr 1fr; }
+  .principles { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: 1fr 1fr; }
+  .sec-num { font-size: 36px; }
+  #topnav { gap: 2px; padding: 0 12px; }
+  #topnav .nav-pill { padding: 4px 8px; font-size: 12px; }
+  .qa-body { padding-left: 16px !important; }
+}
+@media (max-width: 480px) {
+  .toc-grid { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: 1fr; }
+}
+@media print {
+  #progress, #topnav { display: none; }
+  .full-bleed { width: 100%; margin-left: 0; transform: none; }
+  .diagram-shell { border: 1px solid var(--line); border-radius: 12px; }
+  .qa-body { max-height: none !important; padding: 10px 16px 14px 50px !important; }
+  .card:hover, .skill-card:hover, .principle:hover { transform: none; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- 進度條 -->
+<div id="progress"></div>
+
+<!-- 頂部 Sticky Nav -->
+<nav id="topnav" aria-label="章節導航">
+  <a href="#s1" class="nav-pill"><span class="dot"></span>工作選擇</a>
+  <div class="nav-sep"></div>
+  <a href="#s2" class="nav-pill"><span class="dot"></span>就學進修</a>
+  <div class="nav-sep"></div>
+  <a href="#s3" class="nav-pill"><span class="dot"></span>入門指南</a>
+  <div class="nav-sep"></div>
+  <a href="#s4" class="nav-pill"><span class="dot"></span>新生問題</a>
+  <div class="nav-sep"></div>
+  <a href="#s5" class="nav-pill"><span class="dot"></span>判斷原則</a>
+</nav>
+
+<!-- Hero -->
+<header>
+  <div class="inner">
+    <div class="hero-badge">職涯 · 就學規劃分析報告　v3.1</div>
+    <h1>台灣純軟體業：工作選擇、入門指南<br>與資工新生的關鍵提問</h1>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- 目錄 -->
+  <nav class="toc-card" aria-label="目錄">
+    <h2>目錄 CONTENTS</h2>
+    <div class="toc-grid">
+      <a href="#s1" class="toc-item"><span class="toc-num">1</span>台灣純軟體業有哪些工作可選</a>
+      <a href="#s2" class="toc-item"><span class="toc-num">2</span>就學與進修可考慮的科系</a>
+      <a href="#s3" class="toc-item"><span class="toc-num">3</span>入門指南：語言、技能與資源</a>
+      <a href="#s4" class="toc-item"><span class="toc-num">4</span>資工新生會問的問題</a>
+      <a href="#s5" class="toc-item"><span class="toc-num">5</span>給決策者的三個判斷原則</a>
+    </div>
+  </nav>
+
+  <!-- ─── Section 1 ─── -->
+  <section id="s1">
+    <div class="sec-header" data-num="01">
+      <div class="sec-header-inner">
+        <div class="sec-num">01</div>
+        <div class="sec-title">
+          <h2>台灣「純軟體業」有哪些工作可以選擇？</h2>
+          <p>認識職能架構、職位類型與產業分布</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p><b>先定義：</b>「純軟體」指主要產出是軟體／服務、而非硬體的公司或職位。台灣科技業長期以硬體為主（台積電、聯發科、廣達、華碩⋯），但純軟體的機會其實比一般人想像的多，且近年因 AI、SaaS、金融科技而快速成長。</p>
+    </div>
+  </section>
+</div>
+
+<!-- Full-bleed diagram -->
+<div class="full-bleed">
+  <div class="diagram-shell">
+    <div class="diagram-inner">
+    <h3>職能堆疊架構圖</h3>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:10px;">依「距離使用者」由上至下排列，右側為跨層職能。</p>
+      <svg viewBox="0 0 1100 400" xmlns="http://www.w3.org/2000/svg"
+           font-family="'PingFang TC','Microsoft JhengHei',system-ui,sans-serif"
+           style="width:100%;height:auto;display:block;min-width:640px;">
+        <defs>
+          <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#2563eb" stop-opacity=".13"/>
+            <stop offset="100%" stop-color="#2563eb" stop-opacity=".06"/>
+          </linearGradient>
+          <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#0891b2" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="#0891b2" stop-opacity=".05"/>
+          </linearGradient>
+          <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#7c3aed" stop-opacity=".10"/>
+            <stop offset="100%" stop-color="#7c3aed" stop-opacity=".04"/>
+          </linearGradient>
+          <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#059669" stop-opacity=".10"/>
+            <stop offset="100%" stop-color="#059669" stop-opacity=".04"/>
+          </linearGradient>
+        </defs>
+
+        <rect width="1100" height="400" fill="#f8fafc" rx="0"/>
+
+        <!-- 左側軸 -->
+        <line x1="30" y1="30" x2="30" y2="320" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4,4"/>
+        <polygon points="30,26 26,38 34,38" fill="#94a3b8"/>
+        <polygon points="30,324 26,312 34,312" fill="#94a3b8"/>
+        <text x="18" y="178" text-anchor="middle" font-size="11" fill="#94a3b8" transform="rotate(-90,18,178)">靠近使用者 → 基礎設施</text>
+
+        <!-- Layer 1 — UI/UX -->
+        <rect x="48" y="32" width="638" height="62" rx="10" fill="url(#g1)"/>
+        <rect x="48" y="32" width="638" height="62" rx="10" fill="none" stroke="#2563eb" stroke-width="1.8"/>
+        <text x="64" y="52" font-size="11" font-weight="700" fill="#1d4ed8" letter-spacing=".8">使用者介面層</text>
+        <rect x="248" y="58" width="240" height="26" rx="7" fill="#2563eb" opacity=".15"/>
+        <text x="368" y="76" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">UI / UX 設計師</text>
+
+        <!-- Layer 2 — Frontend -->
+        <rect x="48" y="104" width="638" height="62" rx="10" fill="url(#g2)"/>
+        <rect x="48" y="104" width="638" height="62" rx="10" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+        <text x="64" y="124" font-size="11" font-weight="700" fill="#0e7490" letter-spacing=".8">前端展示層</text>
+        <rect x="88" y="130" width="172" height="26" rx="7" fill="#0891b2" opacity=".16"/>
+        <text x="174" y="148" text-anchor="middle" font-size="14" font-weight="700" fill="#164e63">前端工程師</text>
+        <rect x="288" y="130" width="220" height="26" rx="7" fill="#0891b2" opacity=".16"/>
+        <text x="398" y="148" text-anchor="middle" font-size="14" font-weight="700" fill="#164e63">行動 App 工程師</text>
+
+        <!-- Layer 3 — Logic -->
+        <rect x="48" y="176" width="638" height="62" rx="10" fill="url(#g3)"/>
+        <rect x="48" y="176" width="638" height="62" rx="10" fill="none" stroke="#7c3aed" stroke-width="1.8"/>
+        <text x="64" y="196" font-size="11" font-weight="700" fill="#6d28d9" letter-spacing=".8">應用邏輯層</text>
+        <rect x="80" y="202" width="148" height="26" rx="7" fill="#7c3aed" opacity=".15"/>
+        <text x="154" y="220" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">全端工程師</text>
+        <rect x="248" y="202" width="148" height="26" rx="7" fill="#7c3aed" opacity=".15"/>
+        <text x="322" y="220" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">後端工程師</text>
+        <rect x="416" y="202" width="136" height="26" rx="7" fill="#7c3aed" opacity=".15"/>
+        <text x="484" y="220" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">技術 PM</text>
+
+        <!-- Layer 4 — Infra -->
+        <rect x="48" y="248" width="638" height="62" rx="10" fill="url(#g4)"/>
+        <rect x="48" y="248" width="638" height="62" rx="10" fill="none" stroke="#059669" stroke-width="1.8"/>
+        <text x="64" y="268" font-size="11" font-weight="700" fill="#065f46" letter-spacing=".8">基礎設施層</text>
+        <rect x="76" y="274" width="160" height="26" rx="7" fill="#059669" opacity=".15"/>
+        <text x="156" y="292" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">DevOps / SRE</text>
+        <rect x="256" y="274" width="136" height="26" rx="7" fill="#059669" opacity=".15"/>
+        <text x="324" y="292" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">資安工程師</text>
+        <rect x="412" y="274" width="100" height="26" rx="7" fill="#059669" opacity=".15"/>
+        <text x="462" y="292" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">MLOps</text>
+
+        <!-- Divider -->
+        <line x1="706" y1="24" x2="706" y2="328" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="6,5"/>
+        <text x="728" y="20" font-size="12" font-weight="700" fill="#94a3b8">跨層 / 橫向職能</text>
+
+        <!-- Side — Data/ML -->
+        <rect x="716" y="32" width="356" height="62" rx="10" fill="#fef3c7" opacity=".6"/>
+        <rect x="716" y="32" width="356" height="62" rx="10" fill="none" stroke="#f59e0b" stroke-width="1.8"/>
+        <text x="894" y="57" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e">大數據 / 機器學習</text>
+        <text x="894" y="80" text-anchor="middle" font-size="12" fill="#b45309">Data Engineer · Data Scientist</text>
+
+        <!-- Side — AI/ML -->
+        <rect x="716" y="104" width="356" height="62" rx="10" fill="#fef3c7" opacity=".6"/>
+        <rect x="716" y="104" width="356" height="62" rx="10" fill="none" stroke="#f59e0b" stroke-width="1.8"/>
+        <text x="894" y="129" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e">AI / ML 工程師</text>
+        <text x="894" y="152" text-anchor="middle" font-size="12" fill="#b45309">ML Engineer · AI Engineer</text>
+
+        <!-- Side — QA + SA -->
+        <rect x="716" y="176" width="168" height="62" rx="10" fill="#f1f5f9"/>
+        <rect x="716" y="176" width="168" height="62" rx="10" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
+        <text x="800" y="201" text-anchor="middle" font-size="14" font-weight="700" fill="#475569">測試 / QA</text>
+        <text x="800" y="223" text-anchor="middle" font-size="12" fill="#64748b">QA · SDET</text>
+
+        <rect x="904" y="176" width="168" height="62" rx="10" fill="#f1f5f9"/>
+        <rect x="904" y="176" width="168" height="62" rx="10" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
+        <text x="988" y="201" text-anchor="middle" font-size="14" font-weight="700" fill="#475569">系統分析</text>
+        <text x="988" y="223" text-anchor="middle" font-size="12" fill="#64748b">SA</text>
+
+        <!-- Side — Span note -->
+        <rect x="716" y="248" width="356" height="62" rx="10" fill="none" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <text x="894" y="276" text-anchor="middle" font-size="13" fill="#94a3b8">以上職能「跨層」支援</text>
+        <text x="894" y="298" text-anchor="middle" font-size="12" fill="#94a3b8">不直接對應某一產品層</text>
+
+        <!-- Legend -->
+        <rect x="48" y="340" width="13" height="13" rx="3" fill="#2563eb" opacity=".25"/>
+        <rect x="48" y="340" width="13" height="13" rx="3" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="66" y="352" font-size="12" fill="#64748b">直線型（影響產品層次）</text>
+        <rect x="280" y="340" width="13" height="13" rx="3" fill="#f59e0b" opacity=".25"/>
+        <rect x="280" y="340" width="13" height="13" rx="3" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="298" y="352" font-size="12" fill="#64748b">橫向型（跨層支援）</text>
+        <rect x="488" y="340" width="13" height="13" rx="3" fill="#94a3b8" opacity=".25"/>
+        <rect x="488" y="340" width="13" height="13" rx="3" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="506" y="352" font-size="12" fill="#64748b">品質 / 分析型</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- (Section 1 continued) -->
+  <h3>依「職能」分類的職位</h3>
+  <p style="font-size:14px;color:var(--muted);margin-bottom:6px;">點選任一列可高亮標記。</p>
+  <div class="table-wrap">
+    <table id="role-table">
+      <thead>
+        <tr><th>類別</th><th>常見職稱</th><th>做什麼</th><th>常見 Skill</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>前端</b></td><td>Frontend Engineer</td><td>網頁／App 使用者介面</td><td>React、Vue、TypeScript</td></tr>
+        <tr><td><b>後端</b></td><td>Backend Engineer</td><td>伺服器、API、資料庫、系統邏輯</td><td>Java、Go、Python、Node.js、SQL</td></tr>
+        <tr><td><b>全端</b></td><td>Full-stack Engineer</td><td>前後端都做，新創常見</td><td>同前後端、Next.js</td></tr>
+        <tr><td><b>行動 App</b></td><td>iOS / Android Engineer</td><td>手機原生 App</td><td>Swift、Kotlin、React Native</td></tr>
+        <tr><td><b>大數據 / ML</b></td><td>Data Engineer / Scientist</td><td>資料管線、大數據處理、建模</td><td>Python、Spark</td></tr>
+        <tr><td><b>AI / ML</b></td><td>ML Engineer / AI Engineer</td><td>機器學習、深度學習、LLM 應用</td><td>Python、PyTorch、HuggingFace</td></tr>
+        <tr><td><b>MLOps</b></td><td>MLOps Engineer</td><td>ML 模型部署、監控與維運</td><td>Docker、Kubernetes、MLflow</td></tr>
+        <tr><td><b>基礎設施</b></td><td>DevOps / SRE / Cloud</td><td>部署、維運、雲端、系統穩定性</td><td>Docker、Kubernetes、Terraform、AWS／GCP</td></tr>
+        <tr><td><b>資安</b></td><td>Security Engineer / Pentester</td><td>防禦、滲透測試、產品安全</td><td>Burp Suite、OWASP、CTF</td></tr>
+        <tr><td><b>測試</b></td><td>QA / SDET</td><td>品質保證、自動化測試</td><td>Selenium、Cypress、JMeter</td></tr>
+        <tr><td><b>UI/UX 設計師</b></td><td>UX Designer / UI Designer</td><td>使用者介面與體驗設計</td><td>Figma、HTML/CSS 基礎、使用者研究</td></tr>
+        <tr><td><b>技術 PM</b></td><td>Technical Product Manager</td><td>介於產品與工程之間</td><td>PRD 撰寫、Jira、SQL 基礎</td></tr>
+        <tr><td><b>系統分析</b></td><td>SA（System Analyst）</td><td>需求分析、系統設計、溝通業務與開發端</td><td>UML、流程圖、SQL、系統架構</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>依「產業」分類</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>產業</th><th>特色</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><b>傳統金融業</b></td><td>穩定，但薪資平均、技術偏舊</td></tr>
+        <tr><td>2</td><td><b>新型金融</b>（交易所、虛擬貨幣）</td><td>節奏快、要求精準；Bonus 常以幣發放，波動大</td></tr>
+        <tr><td>3</td><td><b>電商</b></td><td>注重推薦演算法與流量優化（Pinkoi 等）</td></tr>
+        <tr><td>4</td><td><b>博弈</b></td><td>台灣屬灰色地帶，部分面向海外市場；節奏快</td></tr>
+        <tr><td>5</td><td><b>遊戲</b></td><td>手遊為主，節奏快、爆肝常見（遊戲橘子等）</td></tr>
+        <tr><td>6</td><td><b>純軟／接案</b></td><td>趨勢科技、IBM</td></tr>
+        <tr><td>7</td><td><b>硬體大廠中的軟體職</b></td><td>台積電、台達電、聯發科；靠近產線者可能需 on-call 輪班</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout tip">
+    <span class="callout-icon">💡</span>
+    <div><b>重點觀念：</b>在台灣，純軟薪資天花板通常是「外商 RD ＞ 頂尖本土軟體／新創 ＞ SI／傳統軟體」。但隨著 AI 工具快速普及，<b>能解決什麼問題、懂哪個領域、怎麼思考</b>，反而越來越決定一個工程師的長期價值。入門時基礎仍然關鍵——現在人人都能用 AI 寫 code，但程式能不能真正解決問題、抵禦攻擊、節省效能，靠的還是底層的理解能力。</div>
+  </div>
+
+  <!-- ─── Section 2 ─── -->
+  <section id="s2">
+    <div class="sec-header" data-num="02">
+      <div class="sec-header-inner">
+        <div class="sec-num">02</div>
+        <div class="sec-title">
+          <h2>就學與進修可以考慮哪些科系？</h2>
+          <p>本科、研究所與自學管道的選擇參考</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>大學階段（本科）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>科系</th><th>特色與適合的出路</th></tr></thead>
+        <tbody>
+          <tr><td><b>資訊工程 CS / CSIE</b></td><td>最主流、最直接。程式、演算法、系統，出路最廣。</td></tr>
+          <tr><td><b>資訊管理 MIS</b></td><td>程式＋商業管理，偏企業系統、PM、資料分析。</td></tr>
+          <tr><td><b>電機工程 EE</b></td><td>硬體為主但含大量軟體／嵌入式，路很廣。</td></tr>
+          <tr><td><b>應用數學 / 統計</b></td><td>走資料科學、AI、量化金融的絕佳底子。</td></tr>
+          <tr><td><b>數位媒體 / 資訊傳播 / 設計</b></td><td>走 UI/UX、前端、遊戲開發。</td></tr>
+          <tr><td><b>跨域（認知科學、資訊社會學）</b></td><td>走 HCI、產品經理方向。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>研究所 / 進修方向</h3>
+    <p style="margin-bottom:10px;">
+      <span class="pill">資工碩士（AI／系統／網路／資安）</span>
+      <span class="pill">資料科學 / AI 跨域學程</span>
+      <span class="pill">資安（台灣近年重點發展）</span>
+      <span class="pill">出國留學（美國 CS 碩士）</span>
+      <span class="pill">線上課程（Coursera、台大開放課）</span>
+      <span class="pill">Bootcamp</span>
+      <span class="pill">業界認證（AWS、GCP、CISSP）</span>
+    </p>
+
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div><b>判斷原則：</b>大學選「基礎扎實、轉彎空間大」的科系（資工／電機／數學），研究所再依興趣<b>收斂</b>到專門領域。現在不需要一次決定一輩子做什麼。</div>
+    </div>
+  </section>
+
+  <!-- ─── Section 3 ─── -->
+  <section id="s3">
+    <div class="sec-header" data-num="03">
+      <div class="sec-header-inner">
+        <div class="sec-num">03</div>
+        <div class="sec-title">
+          <h2>入門指南：語言、技能與資源</h2>
+          <p>選一個入門，其他的之後自然會接觸到</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>程式語言與技術簡介</h3>
+    <div class="filter-bar" id="lang-filters">
+      <button class="filter-btn on" data-f="all">全部</button>
+      <button class="filter-btn" data-f="入門">入門推薦</button>
+      <button class="filter-btn" data-f="後端">後端</button>
+      <button class="filter-btn" data-f="前端">前端</button>
+      <button class="filter-btn" data-f="AI">AI / 資料</button>
+      <button class="filter-btn" data-f="基礎">基礎必學</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>語言／技術</th><th>一句話定位</th><th>常見應用方向</th></tr></thead>
+        <tbody>
+          <tr class="lang-row" data-tags="基礎 入門"><td><b>C</b></td><td>最接近硬體的語言，學了會真正理解電腦怎麼運作</td><td>作業系統、嵌入式、大學必修</td></tr>
+          <tr class="lang-row" data-tags="基礎"><td><b>C++</b></td><td>C 的進化版，加入物件導向概念</td><td>遊戲開發、競程、系統軟體</td></tr>
+          <tr class="lang-row" data-tags="後端"><td><b>Java</b></td><td>企業級後端主力，搭配 Spring 框架跑大型系統</td><td>銀行系統、後端服務</td></tr>
+          <tr class="lang-row" data-tags="前端 入門"><td><b>JavaScript</b></td><td>唯一能在瀏覽器直接跑的語言，前端必學</td><td>網頁前端（React）、後端（Node.js）</td></tr>
+          <tr class="lang-row" data-tags="AI 入門"><td><b>Python</b></td><td>語法最簡單，AI/ML 首選，入門最友善</td><td>資料科學、AI、自動化腳本</td></tr>
+          <tr class="lang-row" data-tags="後端"><td><b>C# / .NET</b></td><td>微軟生態系，語法類似 Java</td><td>企業系統、遊戲（Unity）</td></tr>
+          <tr class="lang-row" data-tags="後端"><td><b>Golang</b></td><td>Google 開發，強調效能與簡潔，原生支援並發 Goroutine</td><td>雲端後端、微服務、DevOps 工具</td></tr>
+          <tr class="lang-row" data-tags="基礎 AI 後端"><td><b>SQL</b></td><td>不是程式語言，但幾乎每個職位都會用到</td><td>查詢與操作資料庫</td></tr>
+          <tr class="lang-row" data-tags="基礎 後端"><td><b>Linux</b></td><td>作業系統，後端 / DevOps 必備環境</td><td>伺服器、雲端、開發環境</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>通用必備技能與學習資源</h3>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">不論你走哪條路，以下技能都會反覆用到。</p>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h4>台大計算機概論</h4>
+        <p>免費公開課，完整建立電腦科學基礎概念，推薦所有入門者。</p>
+        <div class="links">
+          <a href="https://www.youtube.com/playlist?list=PLil-R4o6jmGiDc1CC8PyBbasl8kR9r8Wr" target="_blank">于天立教授（YouTube）</a>
+          <a href="https://www.youtube.com/@NTUOCW" target="_blank">NTU OpenCourseWare</a>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h4>SQL</h4>
+        <p>資料庫查詢語言，無論前後端、PM、分析師都會用到。</p>
+        <div class="links">
+          <a href="https://www.w3schools.com/sql/" target="_blank">W3Schools SQL</a>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h4>Linux 基礎</h4>
+        <p>幾乎所有伺服器都跑在 Linux 上，後端、DevOps 必備。</p>
+      </div>
+      <div class="skill-card">
+        <h4>Git</h4>
+        <p>版本控制，協作開發的基礎，幾乎所有工作都需要。</p>
+        <div class="links">
+          <a href="https://w3c.hexschool.com/git/cfdbd310" target="_blank">六角學院 Git 教學</a>
+          <a href="https://gitbook.tw/" target="_blank">為你自己學 Git</a>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h4>HTML 基礎</h4>
+        <p>網頁結構基礎，理解前端運作不可少。</p>
+        <div class="links">
+          <a href="https://www.w3schools.com/" target="_blank">W3Schools</a>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h4>JSON / Markdown</h4>
+        <p>API 標準格式 + 技術文件語法，到處都會用到，幾小時就能上手。</p>
+      </div>
+      <div class="skill-card">
+        <h4>Java 入門</h4>
+        <p>企業後端與大學課程常用語言，打好 OOP 基礎。</p>
+        <div class="links">
+          <a href="https://www.fooish.com/java/" target="_blank">Fooish Java 教學</a>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h4>Python 入門</h4>
+        <p>入門最友善，AI/ML 首選。100 天課程從零帶起。</p>
+        <div class="links">
+          <a href="https://github.com/ateliershen/Python-100-Days-zh_TW" target="_blank">Python 100 Days（繁中）</a>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h4>自學綜合平台</h4>
+        <p>廣泛探索，找到有興趣的方向再深入。</p>
+        <div class="links">
+          <a href="https://www.freecodecamp.org/" target="_blank">freeCodeCamp（免費）</a>
+          <a href="https://ithelp.ithome.com.tw/" target="_blank">iT邦幫忙 / 鐵人賽</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-top:1px;">
+          <circle cx="12" cy="12" r="10" stroke="#2563eb" stroke-width="2"/>
+          <path d="M12 8v1" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M12 11.5v4.5" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <div><b>非本科系也沒關係：</b>台灣有很多管道可以轉職進入軟體業，例如<b>資策會</b>、<b>六角學院</b>、<b>ALPHA Camp</b> 等都有開設轉職課程，不少工程師都是從其他科系跨來的。</div>
+    </div>
+  </section>
+
+  <!-- ─── Section 4 ─── -->
+  <section id="s4">
+    <div class="sec-header" data-num="04">
+      <div class="sec-header-inner">
+        <div class="sec-num">04</div>
+        <div class="sec-title">
+          <h2>假設是「剛要上資工系」的學生，會問什麼問題？</h2>
+          <p>學業 → 職涯 → 心態，三層問題 · 點題目展開解析</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>A. 關於學業與課程</h3>
+    <ul class="qa-list">
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">資工系「必修」到底在學什麼？演算法、資料結構、作業系統、計組、網路、資料庫這些硬課為何重要？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">這些課程是軟體業所有職位的共同語言。演算法讓你寫出高效的程式；資料結構讓你在對的情境選對工具——同樣是「放東西、取東西」，超商飲料櫃是先放的先被拿走，自己裝箱卻是最後放進去的最先拿出來，兩種邏輯在程式裡對應不同的資料結構，用錯了系統就會出問題；作業系統讓你理解程式跑在哪裡；資料庫讓你懂資料怎麼儲存與設計，最貼近生活的例子就是 Google Drive——你的檔案、資料夾、分享權限、修改時間，全都是被好好管理的資料。即使之後用 AI 寫程式，這些底層知識決定你能不能判斷 AI 的輸出是否正確、有效率、安全。</div>
+      </li>
+    </ul>
+
+    <h3>台大資工系必修課程參考</h3>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:10px;">
+      課程資訊來源：<a href="http://140.112.161.31/NTUVoxCourse/index.php/uquery/search?lang=zh" target="_blank">台大課程查詢系統</a>
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>年級</th><th>課程名稱</th><th>English</th><th>備註</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>大一</b></td><td>資料結構與演算法</td><td>Data Structures and Algorithms</td><td></td></tr>
+          <tr><td><b>大一</b></td><td>計算機程式設計</td><td>Introduction to Computer Programming</td><td></td></tr>
+          <tr><td><b>大二</b></td><td>演算法設計與分析</td><td>Algorithm Design and Analysis</td><td></td></tr>
+          <tr><td><b>大二</b></td><td>系統程式設計</td><td>Systems Programming</td><td></td></tr>
+          <tr><td><b>大二</b></td><td>作業系統</td><td>Operating Systems</td><td></td></tr>
+          <tr><td><b>大三</b></td><td>人工智慧導論</td><td>Foundations of Artificial Intelligence</td><td></td></tr>
+          <tr><td><b>大三</b></td><td>計算機系統實驗</td><td>Computer System Laboratory</td><td></td></tr>
+          <tr><td><b>大三</b></td><td>計算機網路實驗</td><td>Computer Network Laboratory</td><td></td></tr>
+          <tr><td><b>大三</b></td><td>計算機網路</td><td>Computer Networks</td><td></td></tr>
+          <tr><td><b>大三</b></td><td>自動機與形式語言</td><td>Formal Languages and Automata Theory</td><td><a href="https://hackmd.io/YfNr_HT4SlWifnocFZgngg" target="_blank">課程筆記 →</a></td></tr>
+          <tr><td><b>大三</b></td><td>計算機結構</td><td>Computer Architecture</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ul class="qa-list">
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">我數學不夠好（線代、機率、離散）會很吃力嗎？要先補嗎？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">大部分軟體工程師日常工作不需要深厚數學。但走 AI/ML、資安、或對演算法有興趣的方向，機率、線代、離散數學都會是重要的底子。建議進大一後邊上課邊補，不需要提前焦慮。重要的是有「數學感」——能接受抽象推理、喜歡找規律，這比現在的程度更重要。</div>
+      </li>
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">大一該先學哪個程式語言？C/C++、Python 還是 Java？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">學校通常會安排 C 或 C++ 作為第一門課——跟著學就好，能建立扎實的底層概念。如果課外想自學，Python 是最友善的起點。語言本身不重要，重要的是透過它學習「思考如何解決問題」。</div>
+      </li>
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">課內成績 GPA 跟實作能力，哪個對找工作較重要？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">實作能力（Side project、實習、GitHub）在面試中更直接有說服力。但 GPA 在申請研究所、外商初篩時仍有門檻效果（通常 3.5+/4.0 較有利）。兩者不衝突——好好上課的同時做 side project 是最佳組合。</div>
+      </li>
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">要不要很早就決定組別／方向（AI、系統、資安）？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">不需要。大一、大二先廣泛接觸各領域，大三再找到自己的興趣點。提早決定反而可能錯過讓你更有熱情的方向。</div>
+      </li>
+    </ul>
+
+    <h3>B. 關於能力養成與職涯</h3>
+    <ul class="qa-list">
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">除了上課，我還要做什麼？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">Side project（做出一個真實能用的東西）、GitHub（讓人看到你的作品）、實習（了解真實工作環境）、競賽（可選，加分用）。刷 LeetCode 是面試準備，大三後開始即可，不要大一就只刷題。</div>
+      </li>
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">什麼時候開始找實習？大二暑假會太早嗎？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">不太早。大二暑假找小公司或新創的 intern 是很好的起步。大三找正式實習、大四前就有工作經驗加持，競爭力會明顯高出同學一截。</div>
+      </li>
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">台灣軟體工作和去國外／外商差別在哪？英文要到什麼程度？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">薪資差距大（外商在台可達 2–3 倍本土公司）；工作方式、code review 文化也不同。英文要能讀技術文件、寫 email、開會表達意見——不需要母語程度，但需要敢開口。持續接觸英文技術資源（文章、影片、Stack Overflow）自然提升。</div>
+      </li>
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">AI（尤其 LLM）會讓工程師被取代嗎？我現在學的畢業還有用嗎？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">AI 會取代「重複性、低判斷」的部分，但不會取代能判斷 AI 輸出品質、設計系統架構、與業務協作的工程師。現在學的底層知識（演算法、系統、資安）正是讓你能駕馭 AI 而非被取代的關鍵。把 AI 當工具練，而不是競爭對手。</div>
+      </li>
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">要不要唸研究所？直接工作 vs 讀碩士，投資報酬率差多少？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">台灣本土市場：碩士通常初薪高 10–20%，且在大公司的晉升速度較快。但實作能力強的大學生也能追上。如果想做研究、走 AI/ML、或出國，讀碩士投資報酬較明顯。如果目標是盡早累積工作經驗，大學畢業直接進好公司也是好選項。</div>
+      </li>
+    </ul>
+
+    <h3>C. 關於心態與現實</h3>
+    <ul class="qa-list">
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">我不是從小寫程式，起步較晚，來得及嗎？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">幾乎一定來得及。大多數資工系同學大一入學前都沒有大量寫程式的經歷。真正重要的是進來之後是否願意投入，而不是起點在哪裡。</div>
+      </li>
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">我不喜歡寫 code，資工系還有別的出路嗎？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">有很多出路：PM（產品經理）、資料分析、資安顧問、UI/UX 設計、技術業務（Sales Engineer）、技術寫手。資工背景讓你在這些職位有比文組更強的技術理解力，是優勢而非包袱。</div>
+      </li>
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">怎麼分辨「一時的熱門」跟「長期有價值的能力」？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">一個簡單標準：「這個能力 10 年後還適用嗎？」演算法思維、系統設計、溝通能力、學習速度——這些不退流行。某個特定框架或語言可能 5 年後換了，但底層邏輯不變。</div>
+      </li>
+      <li class="qa-item">
+        <div class="qa-q">
+          <span class="qa-badge">Q</span>
+          <span class="qa-text">大學四年如果只能做對三件事，會是哪三件？</span>
+          <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="qa-body">① 打好演算法與系統基礎（這是往後一切的底座）；② 做一個真實的 side project 並放上 GitHub（讓外人看到你的能力）；③ 找到至少一次實習（了解真實工作，比課程有效 10 倍）。其餘的——GPA、競賽、社團——都是加分，不是必要條件。</div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ─── Section 5 ─── -->
+  <section id="s5">
+    <div class="sec-header" data-num="05">
+      <div class="sec-header-inner">
+        <div class="sec-num">05</div>
+        <div class="sec-title">
+          <h2>給決策者的三個判斷原則</h2>
+          <p>幫你或你身邊的人做出更好的選擇</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="principles">
+      <div class="principle" data-n="1">
+        <h4>先廣後收</h4>
+        <p>大學打底、研究所收斂。別在 18 歲就把路走窄。</p>
+      </div>
+      <div class="principle" data-n="2">
+        <h4>能力 ＞ 熱門</h4>
+        <p>基礎能力（演算法、系統、溝通）跨越潮流；追熱門技術會一直追。</p>
+      </div>
+      <div class="principle" data-n="3">
+        <h4>及早實作</h4>
+        <p>Side project 與實習帶來的成長，遠大於多修一門課。</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div><b>提醒：</b>本報告為職涯規劃的思考架構與方向整理，公司名稱、薪資結構、招募情形會隨時間變動，實際決策前請再查證最新的求職市場與各校招生資訊。</div>
+    </div>
+  </section>
+
+</div><!-- /container -->
+
+<footer>
+  <div class="inner">
+    <h3>台灣純軟體業工作與就學進修分析報告</h3>
+    <div class="meta">
+      <span>版本：<b>v3.2</b></span>
+      <span>產生日期：<b>2026-08-16</b></span>
+      <span>檔名：<b>軟體業工作與未來分析報告_v3.2_20260816.html</b></span>
+    </div>
+    <p class="disc">
+      本報告由 Claude 協助整理，內容為一般性職涯與就學參考，不構成個別投資、求職或升學之保證。<br>
+      版本管理規則：<code>軟體業工作與未來分析報告_v&lt;主&gt;.&lt;次&gt;_&lt;YYYYMMDD&gt;.html</code>
+    </p>
+  </div>
+</footer>
+
+<script>
+/* ── 進度條 ── */
+const bar = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const total = document.documentElement.scrollHeight - innerHeight;
+  bar.style.width = (scrollY / total * 100) + '%';
+}, {passive: true});
+
+/* ── Topnav 出現時機（捲過 TOC card 後才顯示） ── */
+const topnav = document.getElementById('topnav');
+const toc = document.querySelector('.toc-card');
+const tocObs = new IntersectionObserver(([e]) => {
+  topnav.classList.toggle('visible', !e.isIntersecting);
+}, {threshold: 0});
+if(toc) tocObs.observe(toc);
+
+/* ── Topnav active pill（Intersection Observer） ── */
+const sections = document.querySelectorAll('section[id]');
+const pills = document.querySelectorAll('#topnav .nav-pill');
+const secObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      pills.forEach(p => p.classList.remove('active'));
+      const p = document.querySelector(`#topnav .nav-pill[href="#${e.target.id}"]`);
+      if(p) p.classList.add('active');
+    }
+  });
+}, {rootMargin: '-20% 0px -70% 0px'});
+sections.forEach(s => secObs.observe(s));
+
+/* ── Table row highlight ── */
+document.querySelectorAll('tbody').forEach(tb => {
+  tb.addEventListener('click', e => {
+    const row = e.target.closest('tr');
+    if(!row) return;
+    const was = row.classList.contains('active');
+    tb.querySelectorAll('tr').forEach(r => r.classList.remove('active'));
+    if(!was) row.classList.add('active');
+  });
+});
+
+/* ── Language filter ── */
+document.getElementById('lang-filters')?.addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if(!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const f = btn.dataset.f;
+  document.querySelectorAll('.lang-row').forEach(row => {
+    row.classList.toggle('hidden', f !== 'all' && !row.dataset.tags.includes(f));
+  });
+});
+
+/* ── Q&A accordion ── */
+document.querySelectorAll('.qa-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.closest('.qa-item');
+    const wasOpen = item.classList.contains('open');
+    item.closest('.qa-list').querySelectorAll('.qa-item').forEach(i => i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+</script>
+</body>
+</html>
