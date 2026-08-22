@@ -58,10 +58,7 @@ a:hover { text-decoration: underline; }
   display: flex; align-items: center;
   padding: 0 24px;
   gap: 6px;
-  transform: translateY(-100%);
-  transition: transform .25s ease;
 }
-#topnav.visible { transform: translateY(0); }
 #topnav .nav-pill {
   display: flex; align-items: center; gap: 6px;
   padding: 5px 12px; border-radius: 999px;
@@ -83,6 +80,39 @@ a:hover { text-decoration: underline; }
 }
 #topnav .nav-pill.active .dot { background: var(--brand); }
 #topnav .nav-sep { width: 1px; height: 16px; background: var(--line); flex-shrink: 0; }
+
+/* 頂部 nav 子選單 */
+#topnav .nav-pill-wrap { position: relative; display: flex; align-items: center; }
+#topnav .nav-caret {
+  display: flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; margin-left: -4px;
+  border: none; background: none; color: var(--muted);
+  cursor: pointer; border-radius: 999px; transition: all .15s;
+  font-family: inherit;
+}
+#topnav .nav-caret:hover { color: var(--brand); background: #eff6ff; }
+#topnav .nav-caret svg { transition: transform .2s; }
+#topnav .nav-pill-wrap:hover .nav-caret svg,
+#topnav .nav-pill-wrap.dd-open .nav-caret svg { transform: rotate(180deg); }
+#topnav .nav-dropdown {
+  position: absolute; top: 100%; left: 0; margin-top: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(15,23,42,.14);
+  padding: 6px; min-width: 220px;
+  opacity: 0; visibility: hidden; transform: translateY(-6px);
+  transition: opacity .15s, transform .15s, visibility .15s;
+  z-index: 250;
+}
+#topnav .nav-pill-wrap:hover .nav-dropdown,
+#topnav .nav-pill-wrap.dd-open .nav-dropdown {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+#topnav .nav-dropdown a {
+  display: block; padding: 9px 12px; border-radius: 8px;
+  font-size: 13px; color: var(--sub); text-decoration: none;
+  white-space: normal; line-height: 1.4;
+}
+#topnav .nav-dropdown a:hover { background: #eff6ff; color: var(--brand); }
 
 /* ══════════════════════════════════
    Hero Header
@@ -149,8 +179,9 @@ header p { font-size: 16px; opacity: .88; max-width: 560px; }
 }
 .toc-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 16px;
+  align-items: start;
 }
 .toc-item {
   display: flex; align-items: center; gap: 10px;
@@ -169,6 +200,15 @@ header p { font-size: 16px; opacity: .88; max-width: 560px; }
   transition: all .15s;
 }
 .toc-item:hover .toc-num { background: var(--brand); color: #fff; }
+.toc-sub { list-style: none; margin: 4px 0 2px 34px; padding-left: 10px; border-left: 2px solid var(--line); }
+.toc-sub li { margin: 2px 0; }
+.toc-sub a {
+  display: block; padding: 5px 8px; border-radius: 7px;
+  font-size: 13px; color: var(--muted); text-decoration: none;
+  transition: all .15s;
+}
+.toc-sub a:hover { background: #eff6ff; color: var(--brand); }
+.toc-block { margin-bottom: 4px; }
 
 /* ══════════════════════════════════
    章節
@@ -211,7 +251,23 @@ section { margin-bottom: 64px; scroll-margin-top: calc(var(--nav-h) + 16px); }
 .sec-title h2 { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.3; }
 .sec-title p  { font-size: 14px; color: var(--muted); margin-top: 4px; }
 
-h3 { font-size: 17px; font-weight: 700; color: var(--brand-d); margin: 32px 0 12px; }
+h3 { font-size: 17px; font-weight: 700; color: var(--brand-d); margin: 0; }
+
+/* ══════════════════════════════════
+   Sub-section 收合（h3 toggle）
+══════════════════════════════════ */
+.subsec { margin: 32px 0 12px; scroll-margin-top: calc(var(--nav-h) + 16px); }
+.subsec > summary {
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; user-select: none; padding: 4px 0;
+  list-style: none;
+}
+.subsec > summary::-webkit-details-marker { display: none; }
+.subsec > summary::marker { content: ""; }
+.subsec > summary:hover h3 { color: var(--brand); }
+.subsec-chevron { flex-shrink: 0; color: var(--muted); transition: transform .2s, color .15s; }
+.subsec[open] > summary .subsec-chevron { transform: rotate(90deg); color: var(--brand); }
+.subsec-body { padding-top: 10px; }
 
 /* ══════════════════════════════════
    Card
@@ -236,22 +292,9 @@ h3 { font-size: 17px; font-weight: 700; color: var(--brand-d); margin: 32px 0 12
 .callout.info { background: var(--info-bg); border-left: 4px solid var(--brand); color: #1e40af; }
 
 /* ══════════════════════════════════
-   全寬 Breakout（Diagram）
+   Diagram（寬版 SVG 橫向捲動）
 ══════════════════════════════════ */
-.full-bleed {
-  width: 100vw;
-  margin-left: 50%;
-  transform: translateX(-50%);
-  margin-top: 16px; margin-bottom: 16px;
-}
-.diagram-shell {
-  background: var(--card);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: 24px 0;
-  overflow-x: auto;
-}
-.diagram-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.diagram-scroll { overflow-x: auto; margin: 14px 0; }
 
 /* ══════════════════════════════════
    Table
@@ -413,10 +456,10 @@ footer code { font-size: 12px; color: #64748b; }
 }
 @media print {
   #progress, #topnav { display: none; }
-  .full-bleed { width: 100%; margin-left: 0; transform: none; }
-  .diagram-shell { border: 1px solid var(--line); border-radius: 12px; }
   .qa-body { max-height: none !important; padding: 10px 16px 14px 50px !important; }
   .card:hover, .skill-card:hover, .principle:hover { transform: none; box-shadow: none; }
+  .subsec > *:not(summary) { display: block !important; }
+  .subsec-chevron { display: none; }
 }
 </style>
 </head>
@@ -427,13 +470,53 @@ footer code { font-size: 12px; color: #64748b; }
 
 <!-- 頂部 Sticky Nav -->
 <nav id="topnav" aria-label="章節導航">
-  <a href="#s1" class="nav-pill"><span class="dot"></span>工作選擇</a>
+  <div class="nav-pill-wrap">
+    <a href="#s1" class="nav-pill"><span class="dot"></span>工作選擇</a>
+    <button type="button" class="nav-caret" aria-label="展開「工作選擇」子項目" aria-expanded="false">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="nav-dropdown">
+      <a href="#s1-diagram">職能堆疊架構圖</a>
+      <a href="#s1-roles">依「職能」分類的職位</a>
+      <a href="#s1-industries">依「產業」分類</a>
+    </div>
+  </div>
   <div class="nav-sep"></div>
-  <a href="#s2" class="nav-pill"><span class="dot"></span>就學進修</a>
+  <div class="nav-pill-wrap">
+    <a href="#s2" class="nav-pill"><span class="dot"></span>就學進修</a>
+    <button type="button" class="nav-caret" aria-label="展開「就學進修」子項目" aria-expanded="false">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="nav-dropdown">
+      <a href="#s2-univ">大學階段（本科）</a>
+      <a href="#s2-grad">研究所 / 進修方向</a>
+    </div>
+  </div>
   <div class="nav-sep"></div>
-  <a href="#s3" class="nav-pill"><span class="dot"></span>入門指南</a>
+  <div class="nav-pill-wrap">
+    <a href="#s3" class="nav-pill"><span class="dot"></span>入門指南</a>
+    <button type="button" class="nav-caret" aria-label="展開「入門指南」子項目" aria-expanded="false">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="nav-dropdown">
+      <a href="#s3-langs">程式語言與技術簡介</a>
+      <a href="#s3-skills">通用必備技能與學習資源</a>
+      <a href="#s3-game-resources">遊戲相關學習資源</a>
+      <a href="#s3-news">遊戲相關新聞與 AI 應用</a>
+    </div>
+  </div>
   <div class="nav-sep"></div>
-  <a href="#s4" class="nav-pill"><span class="dot"></span>新生問題</a>
+  <div class="nav-pill-wrap">
+    <a href="#s4" class="nav-pill"><span class="dot"></span>新生問題</a>
+    <button type="button" class="nav-caret" aria-label="展開「新生問題」子項目" aria-expanded="false">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="nav-dropdown">
+      <a href="#s4-a">A. 關於學業與課程</a>
+      <a href="#s4-b">B. 關於能力養成與職涯</a>
+      <a href="#s4-c">C. 關於心態與現實</a>
+    </div>
+  </div>
   <div class="nav-sep"></div>
   <a href="#s5" class="nav-pill"><span class="dot"></span>判斷原則</a>
 </nav>
@@ -452,11 +535,41 @@ footer code { font-size: 12px; color: #64748b; }
   <nav class="toc-card" aria-label="目錄">
     <h2>目錄 CONTENTS</h2>
     <div class="toc-grid">
-      <a href="#s1" class="toc-item"><span class="toc-num">1</span>台灣純軟體業有哪些工作可選</a>
-      <a href="#s2" class="toc-item"><span class="toc-num">2</span>就學與進修可考慮的科系</a>
-      <a href="#s3" class="toc-item"><span class="toc-num">3</span>入門指南：語言、技能與資源</a>
-      <a href="#s4" class="toc-item"><span class="toc-num">4</span>資工新生會問的問題</a>
-      <a href="#s5" class="toc-item"><span class="toc-num">5</span>給決策者的三個判斷原則</a>
+      <div class="toc-block">
+        <a href="#s1" class="toc-item"><span class="toc-num">1</span>台灣純軟體業有哪些工作可選</a>
+        <ul class="toc-sub">
+          <li><a href="#s1-diagram">職能堆疊架構圖</a></li>
+          <li><a href="#s1-roles">依「職能」分類的職位</a></li>
+          <li><a href="#s1-industries">依「產業」分類</a></li>
+        </ul>
+      </div>
+      <div class="toc-block">
+        <a href="#s2" class="toc-item"><span class="toc-num">2</span>就學與進修可考慮的科系</a>
+        <ul class="toc-sub">
+          <li><a href="#s2-univ">大學階段（本科）</a></li>
+          <li><a href="#s2-grad">研究所 / 進修方向</a></li>
+        </ul>
+      </div>
+      <div class="toc-block">
+        <a href="#s3" class="toc-item"><span class="toc-num">3</span>入門指南：語言、技能與資源</a>
+        <ul class="toc-sub">
+          <li><a href="#s3-langs">程式語言與技術簡介</a></li>
+          <li><a href="#s3-skills">通用必備技能與學習資源</a></li>
+          <li><a href="#s3-game-resources">遊戲相關學習資源</a></li>
+          <li><a href="#s3-news">遊戲相關新聞與 AI 應用</a></li>
+        </ul>
+      </div>
+      <div class="toc-block">
+        <a href="#s4" class="toc-item"><span class="toc-num">4</span>資工新生會問的問題</a>
+        <ul class="toc-sub">
+          <li><a href="#s4-a">A. 關於學業與課程</a></li>
+          <li><a href="#s4-b">B. 關於能力養成與職涯</a></li>
+          <li><a href="#s4-c">C. 關於心態與現實</a></li>
+        </ul>
+      </div>
+      <div class="toc-block">
+        <a href="#s5" class="toc-item"><span class="toc-num">5</span>給決策者的三個判斷原則</a>
+      </div>
     </div>
   </nav>
 
@@ -475,15 +588,15 @@ footer code { font-size: 12px; color: #64748b; }
     <div class="card">
       <p><b>先定義：</b>「純軟體」指主要產出是軟體／服務、而非硬體的公司或職位。台灣科技業長期以硬體為主（台積電、聯發科、廣達、華碩⋯），但純軟體的機會其實比一般人想像的多，且近年因 AI、SaaS、金融科技而快速成長。</p>
     </div>
-  </section>
-</div>
 
-<!-- Full-bleed diagram -->
-<div class="full-bleed">
-  <div class="diagram-shell">
-    <div class="diagram-inner">
-    <h3>職能堆疊架構圖</h3>
+    <details class="subsec" id="s1-diagram">
+      <summary>
+        <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <h3>職能堆疊架構圖</h3>
+      </summary>
+      <div class="subsec-body">
     <p style="font-size:14px;color:var(--muted);margin-bottom:10px;">依「距離使用者」由上至下排列，右側為跨層職能。</p>
+    <div class="diagram-scroll">
       <svg viewBox="0 0 1100 400" xmlns="http://www.w3.org/2000/svg"
            font-family="'PingFang TC','Microsoft JhengHei',system-ui,sans-serif"
            style="width:100%;height:auto;display:block;min-width:640px;">
@@ -596,12 +709,15 @@ footer code { font-size: 12px; color: #64748b; }
         <text x="506" y="352" font-size="12" fill="#64748b">品質 / 分析型</text>
       </svg>
     </div>
-  </div>
-</div>
+      </div>
+    </details>
 
-<div class="container">
-  <!-- (Section 1 continued) -->
-  <h3>依「職能」分類的職位</h3>
+    <details class="subsec" id="s1-roles">
+    <summary>
+      <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <h3>依「職能」分類的職位</h3>
+    </summary>
+    <div class="subsec-body">
   <p style="font-size:14px;color:var(--muted);margin-bottom:6px;">點選任一列可高亮標記。</p>
   <div class="table-wrap">
     <table id="role-table">
@@ -625,8 +741,15 @@ footer code { font-size: 12px; color: #64748b; }
       </tbody>
     </table>
   </div>
+    </div>
+  </details>
 
-  <h3>依「產業」分類</h3>
+  <details class="subsec" id="s1-industries">
+    <summary>
+      <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <h3>依「產業」分類</h3>
+    </summary>
+    <div class="subsec-body">
   <div class="table-wrap">
     <table>
       <thead><tr><th>#</th><th>產業</th><th>特色</th></tr></thead>
@@ -646,6 +769,9 @@ footer code { font-size: 12px; color: #64748b; }
     <span class="callout-icon">💡</span>
     <div><b>重點觀念：</b>在台灣，純軟薪資天花板通常是「外商 RD ＞ 頂尖本土軟體／新創 ＞ 傳統軟體」。但隨著 AI 工具快速普及，<b>能解決什麼問題、懂哪個領域、怎麼思考</b>，反而越來越決定一個工程師的長期價值。入門時基礎仍然關鍵——現在人人都能用 AI 寫 code，但程式能不能真正解決問題、抵禦攻擊、節省效能，靠的還是底層的理解能力。</div>
   </div>
+    </div>
+  </details>
+  </section>
 
   <!-- ─── Section 2 ─── -->
   <section id="s2">
@@ -659,22 +785,44 @@ footer code { font-size: 12px; color: #64748b; }
       </div>
     </div>
 
-    <h3>大學階段（本科）</h3>
+    <details class="subsec" id="s2-univ">
+      <summary>
+        <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <h3>大學階段（本科）</h3>
+      </summary>
+      <div class="subsec-body">
+    <p style="font-size:14px;color:var(--muted);margin-bottom:10px;">
+      以台大資工系為例，課程資訊來源：<a href="http://140.112.161.31/NTUVoxCourse/index.php/uquery/search?lang=zh" target="_blank">台大課程查詢系統</a>
+    </p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>科系</th><th>特色與適合的出路</th></tr></thead>
+        <thead>
+          <tr><th>年級</th><th>課程名稱</th><th>English</th><th>備註</th></tr>
+        </thead>
         <tbody>
-          <tr><td><b>資訊工程 CS / CSIE</b></td><td>最主流、最直接。程式、演算法、系統，出路最廣。</td></tr>
-          <tr><td><b>資訊管理 MIS</b></td><td>程式＋商業管理，偏企業系統、PM、資料分析。</td></tr>
-          <tr><td><b>電機工程 EE</b></td><td>硬體為主但含大量軟體／嵌入式，路很廣。</td></tr>
-          <tr><td><b>應用數學 / 統計</b></td><td>走資料科學、AI、量化金融的絕佳底子。</td></tr>
-          <tr><td><b>數位媒體 / 資訊傳播 / 設計</b></td><td>走 UI/UX、前端、遊戲開發。</td></tr>
-          <tr><td><b>跨域（認知科學、資訊社會學）</b></td><td>產品經理方向。</td></tr>
+          <tr><td><b>大一</b></td><td>資料結構與演算法</td><td>Data Structures and Algorithms</td><td></td></tr>
+          <tr><td><b>大一</b></td><td>計算機程式設計</td><td>Introduction to Computer Programming</td><td></td></tr>
+          <tr><td><b>大二</b></td><td>演算法設計與分析</td><td>Algorithm Design and Analysis</td><td></td></tr>
+          <tr><td><b>大二</b></td><td>系統程式設計</td><td>Systems Programming</td><td></td></tr>
+          <tr><td><b>大二</b></td><td>作業系統</td><td>Operating Systems</td><td></td></tr>
+          <tr><td><b>大三</b></td><td>人工智慧導論</td><td>Foundations of Artificial Intelligence</td><td></td></tr>
+          <tr><td><b>大三</b></td><td>計算機系統實驗</td><td>Computer System Laboratory</td><td></td></tr>
+          <tr><td><b>大三</b></td><td>計算機網路實驗</td><td>Computer Network Laboratory</td><td></td></tr>
+          <tr><td><b>大三</b></td><td>計算機網路</td><td>Computer Networks</td><td></td></tr>
+          <tr><td><b>大三</b></td><td>自動機與形式語言</td><td>Formal Languages and Automata Theory</td><td><a href="https://hackmd.io/YfNr_HT4SlWifnocFZgngg" target="_blank">課程筆記 →</a></td></tr>
+          <tr><td><b>大三</b></td><td>計算機結構</td><td>Computer Architecture</td><td></td></tr>
         </tbody>
       </table>
     </div>
+      </div>
+    </details>
 
-    <h3>研究所 / 進修方向</h3>
+    <details class="subsec" id="s2-grad">
+      <summary>
+        <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <h3>研究所 / 進修方向</h3>
+      </summary>
+      <div class="subsec-body">
     <p style="margin-bottom:10px;">
       <span class="pill">資工碩士（AI／系統／網路／資安）</span>
       <span class="pill">資料科學 / AI 跨域學程</span>
@@ -689,6 +837,8 @@ footer code { font-size: 12px; color: #64748b; }
       <span class="callout-icon">💡</span>
       <div><b>判斷原則：</b>大學選「基礎扎實、轉彎空間大」的科系（資工／電機／數學），研究所再依興趣<b>收斂</b>到專門領域。現在不需要一次決定一輩子做什麼。</div>
     </div>
+      </div>
+    </details>
   </section>
 
   <!-- ─── Section 3 ─── -->
@@ -703,7 +853,12 @@ footer code { font-size: 12px; color: #64748b; }
       </div>
     </div>
 
-    <h3>程式語言與技術簡介</h3>
+    <details class="subsec" id="s3-langs">
+      <summary>
+        <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <h3>程式語言與技術簡介</h3>
+      </summary>
+      <div class="subsec-body">
     <div class="filter-bar" id="lang-filters">
       <button class="filter-btn on" data-f="all">全部</button>
       <button class="filter-btn" data-f="入門">入門推薦</button>
@@ -728,8 +883,15 @@ footer code { font-size: 12px; color: #64748b; }
         </tbody>
       </table>
     </div>
+      </div>
+    </details>
 
-    <h3>通用必備技能與學習資源</h3>
+    <details class="subsec" id="s3-skills">
+      <summary>
+        <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <h3>通用必備技能與學習資源</h3>
+      </summary>
+      <div class="subsec-body">
     <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">不論你走哪條路，以下技能都會反覆用到。</p>
     <div class="skills-grid">
       <div class="skill-card">
@@ -759,39 +921,6 @@ footer code { font-size: 12px; color: #64748b; }
           <a href="https://gitbook.tw/" target="_blank">為你自己學 Git</a>
         </div>
       </div>
-      <div class="skill-card">
-        <h4>HTML 基礎</h4>
-        <p>網頁結構基礎，理解前端運作不可少。</p>
-        <div class="links">
-          <a href="https://www.w3schools.com/" target="_blank">W3Schools</a>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>JSON / Markdown</h4>
-        <p>API 標準格式 + 技術文件語法，到處都會用到，幾小時就能上手。</p>
-      </div>
-      <div class="skill-card">
-        <h4>Java 入門</h4>
-        <p>企業後端與大學課程常用語言，打好 OOP 基礎。</p>
-        <div class="links">
-          <a href="https://www.fooish.com/java/" target="_blank">Fooish Java 教學</a>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>Python 入門</h4>
-        <p>入門最友善，AI/ML 首選。100 天課程從零帶起。</p>
-        <div class="links">
-          <a href="https://github.com/ateliershen/Python-100-Days-zh_TW" target="_blank">Python 100 Days（繁中）</a>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>自學綜合平台</h4>
-        <p>廣泛探索，找到有興趣的方向再深入。</p>
-        <div class="links">
-          <a href="https://www.freecodecamp.org/" target="_blank">freeCodeCamp（免費）</a>
-          <a href="https://ithelp.ithome.com.tw/" target="_blank">iT邦幫忙 / 鐵人賽</a>
-        </div>
-      </div>
     </div>
 
     <div class="callout info">
@@ -804,6 +933,83 @@ footer code { font-size: 12px; color: #64748b; }
       </span>
       <div><b>非本科系也沒關係：</b>台灣有很多管道可以轉職進入軟體業，例如<b>資策會</b>、<b>六角學院</b>、<b>ALPHA Camp</b> 等都有開設轉職課程，不少工程師都是從其他科系跨來的。</div>
     </div>
+      </div>
+    </details>
+
+    <details class="subsec" id="s3-game-resources">
+      <summary>
+        <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <h3>遊戲相關學習資源</h3>
+      </summary>
+      <div class="subsec-body">
+    <p style="font-size:14px;color:var(--muted);margin-bottom:10px;">「做遊戲」不等於「寫程式」，遊戲產業內部其實有不同職能分工，先搞清楚自己想走哪一塊，再決定要學什麼。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>職能</th><th>主要工作</th><th>入門方向</th></tr></thead>
+        <tbody>
+          <tr><td><b>遊戲企劃／遊戲設計師</b></td><td>設計玩法、關卡、數值，撰寫遊戲設計文件</td><td>邏輯思考與文件撰寫，不一定要會寫程式</td></tr>
+          <tr><td><b>遊戲程式</b></td><td>實作遊戲機制、串接引擎</td><td>C#、C++、Unity／Unreal（下方資源以此方向為主）</td></tr>
+          <tr><td><b>美術</b></td><td>角色、場景、特效繪製或建模</td><td>繪圖／3D 建模軟體，非本文件範圍</td></tr>
+          <tr><td><b>音效／音樂</b></td><td>配樂與音效設計</td><td>音訊軟體，非本文件範圍</td></tr>
+          <tr><td><b>QA / 測試</b></td><td>找 bug、確保遊戲品質</td><td>細心與邏輯測試能力</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin:10px 0 16px;">下方學習資源以「遊戲程式」方向為主。</p>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h4>遊戲開發入門</h4>
+        <p>對做遊戲有興趣可從 Unity（C#）或 Unreal（C++）入手，先做出簡單小遊戲累積成就感。</p>
+        <div class="links">
+          <a href="https://learn.unity.com/" target="_blank">Unity Learn</a>
+          <a href="https://dev.epicgames.com/community/unreal-engine" target="_blank">Unreal Engine 官方教學</a>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h4>Python 入門</h4>
+        <p>入門最友善，AI/ML 首選。100 天課程從零帶起。</p>
+        <div class="links">
+          <a href="https://github.com/ateliershen/Python-100-Days-zh_TW" target="_blank">Python 100 Days（繁中）</a>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h4>Unreal Engine</h4>
+        <p>官方最新課程與教學合集，適合想深入 Unreal 引擎開發的人。</p>
+        <div class="links">
+          <a href="https://www.unrealengine.com/blog/dive-into-these-brand-new-unreal-engine-courses-and-tutorials?lang=zh-CN" target="_blank">官方部落格：最新課程與教學</a>
+          <a href="https://www.youtube.com/playlist?list=PLzJuQEoW0k57KHTAki4mjY9wF6fEvdGC_" target="_blank">YouTube 教學播放清單</a>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h4>Unity</h4>
+        <p>另一套主流遊戲引擎，適合想快速上手、做出第一個小遊戲的人。</p>
+        <div class="links">
+          <a href="https://www.youtube.com/watch?v=vOCCtfZtlzk" target="_blank">YouTube 入門教學</a>
+        </div>
+      </div>
+    </div>
+      </div>
+    </details>
+
+    <details class="subsec" id="s3-news">
+      <summary>
+        <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <h3>遊戲相關新聞與 AI 應用</h3>
+      </summary>
+      <div class="subsec-body">
+    <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">遊戲產業正大量導入 AI（美術生成、NPC 對話、關卡設計輔助等），以下分享兩則相關動態與練習資源。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:flex-start;">
+      <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fmannyyhl%2Fposts%2Fpfbid02aQLSsMMiXFvgmney7uZByFtAfEEGiPGq26apES2XjruFusUHtQqedeZKnKCtjpThl&show_text=true&width=500" width="500" height="733" style="border:none;overflow:hidden;max-width:100%;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+      <div class="skill-card" style="max-width:500px;flex:1 1 320px;">
+        <h4>遊戲相關程式題目練習</h4>
+        <p>裡面有一些很初階的題目可以嘗試，適合入門者練手感。</p>
+        <div class="links">
+          <a href="https://codelove.tw/@tony/post/l3joma#google_vignette" target="_blank">閱讀文章</a>
+        </div>
+      </div>
+    </div>
+      </div>
+    </details>
   </section>
 
   <!-- ─── Section 4 ─── -->
@@ -818,11 +1024,16 @@ footer code { font-size: 12px; color: #64748b; }
       </div>
     </div>
 
-    <h3>A. 關於學業與課程</h3>
+    <details class="subsec" id="s4-a">
+      <summary>
+        <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <h3>A. 關於學業與課程</h3>
+      </summary>
+      <div class="subsec-body">
     <ul class="qa-list">
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">1</span>
           <span class="qa-text">資工系「必修」到底在學什麼？演算法、資料結構、作業系統、計組、網路、資料庫這些硬課為何重要？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -830,35 +1041,10 @@ footer code { font-size: 12px; color: #64748b; }
       </li>
     </ul>
 
-    <h3>台大資工系必修課程參考</h3>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:10px;">
-      課程資訊來源：<a href="http://140.112.161.31/NTUVoxCourse/index.php/uquery/search?lang=zh" target="_blank">台大課程查詢系統</a>
-    </p>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>年級</th><th>課程名稱</th><th>English</th><th>備註</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><b>大一</b></td><td>資料結構與演算法</td><td>Data Structures and Algorithms</td><td></td></tr>
-          <tr><td><b>大一</b></td><td>計算機程式設計</td><td>Introduction to Computer Programming</td><td></td></tr>
-          <tr><td><b>大二</b></td><td>演算法設計與分析</td><td>Algorithm Design and Analysis</td><td></td></tr>
-          <tr><td><b>大二</b></td><td>系統程式設計</td><td>Systems Programming</td><td></td></tr>
-          <tr><td><b>大二</b></td><td>作業系統</td><td>Operating Systems</td><td></td></tr>
-          <tr><td><b>大三</b></td><td>人工智慧導論</td><td>Foundations of Artificial Intelligence</td><td></td></tr>
-          <tr><td><b>大三</b></td><td>計算機系統實驗</td><td>Computer System Laboratory</td><td></td></tr>
-          <tr><td><b>大三</b></td><td>計算機網路實驗</td><td>Computer Network Laboratory</td><td></td></tr>
-          <tr><td><b>大三</b></td><td>計算機網路</td><td>Computer Networks</td><td></td></tr>
-          <tr><td><b>大三</b></td><td>自動機與形式語言</td><td>Formal Languages and Automata Theory</td><td><a href="https://hackmd.io/YfNr_HT4SlWifnocFZgngg" target="_blank">課程筆記 →</a></td></tr>
-          <tr><td><b>大三</b></td><td>計算機結構</td><td>Computer Architecture</td><td></td></tr>
-        </tbody>
-      </table>
-    </div>
-
     <ul class="qa-list">
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">2</span>
           <span class="qa-text">我數學不夠好（線代、機率、離散）會很吃力嗎？要先補嗎？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -866,15 +1052,15 @@ footer code { font-size: 12px; color: #64748b; }
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">3</span>
           <span class="qa-text">大一該先學哪個程式語言？C/C++、Python 還是 Java？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="qa-body">學校通常會安排 C 或 C++ 作為第一門課——跟著學就好，能建立扎實的底層概念。如果課外想自學，Python 是最友善的起點。語言本身不重要，重要的是透過它學習「思考如何解決問題」。現在有 AI 輔助，起步也比以前容易——可以先讓 AI 幫你做一個自己感興趣的 side project，再從裡面開始讀懂、修改，這樣學起來動機強很多。</div>
+        <div class="qa-body">學校通常會安排 C 或 C++ 作為第一門課——跟著學就好，能建立扎實的底層概念。如果課外想自學，Python 是最友善的起點。語言本身不重要，重要的是透過它學習「思考如何解決問題」。現在有 AI 輔助，起步也比以前容易——可以先讓 AI 幫你做一個自己感興趣的 side project，再從裡面開始讀懂、修改，這樣學起來動機強很多。如果對遊戲產業有興趣的話，可以從 C#、C++、Python 先著手，同時研究相關的開發引擎（如 Unity、Unreal），可參考這篇文章：<a href="https://cthr.ctgoodjobs.hk/HRNews/%E9%81%8A%E6%88%B2%E8%A8%AD%E8%A8%88%E5%B8%AB-%E8%81%B7%E6%A5%AD-%E6%8A%80%E8%83%BD-%E6%8A%80%E8%A1%93-%E5%B7%A5%E4%BD%9C%E5%85%A7%E5%AE%B9/45206" target="_blank">遊戲設計師：職業、技能、技術、工作內容</a>。</div>
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">4</span>
           <span class="qa-text">課內成績 GPA 跟實作能力，哪個對找工作較重要？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -882,27 +1068,34 @@ footer code { font-size: 12px; color: #64748b; }
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">5</span>
           <span class="qa-text">要不要很早就決定組別／方向（AI、系統、資安）？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <div class="qa-body">不需要急著決定。如果對某個方向有興趣當然可以提早研究，但建議用最小成本多接觸不同領域——看看課程介紹、讀幾篇文章、聽學長姐或老師聊聊各方向的日常——再慢慢收斂。提早決定反而可能錯過讓你更有熱情的方向。</div>
       </li>
     </ul>
+      </div>
+    </details>
 
-    <h3>B. 關於能力養成與職涯</h3>
+    <details class="subsec" id="s4-b">
+      <summary>
+        <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <h3>B. 關於能力養成與職涯</h3>
+      </summary>
+      <div class="subsec-body">
     <ul class="qa-list">
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">1</span>
           <span class="qa-text">除了上課，我還要做什麼？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="qa-body">Side project（做出一個真實能用的東西）、GitHub（讓人看到你的作品）、實習（了解真實工作環境）、競賽（可選，加分用）。刷 LeetCode 是面試準備，大三後開始即可，不要大一就只刷題。</div>
+        <div class="qa-body">Side project（做出一個真實能用的東西）、GitHub（讓人看到你的作品）、實習（了解真實工作環境）、競賽（可選，加分用）。刷 LeetCode 是面試準備，大三後開始即可，不要大一就只刷題。<br><br>如果你對遊戲設計有興趣，方向會稍微不同：比起刷題，更重要的是建立作品集（Portfolio）——哪怕是一個小遊戲，能玩、能展示就有說服力。工具方面可以從 Unity 或 Unreal Engine 開始上手，邊學邊做。<br><br>培養「感知力」也很關鍵：多玩不同類型的遊戲，但要帶著思考去玩——「這個關卡設計為什麼讓我想繼續？」「這個操控手感差在哪裡？」這種對玩家體驗的敏感度，是課堂上學不到的，只能靠刻意練習。</div>
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">2</span>
           <span class="qa-text">什麼時候開始找實習？大二暑假會太早嗎？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -910,7 +1103,7 @@ footer code { font-size: 12px; color: #64748b; }
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">3</span>
           <span class="qa-text">台灣軟體工作和去國外／外商差別在哪？英文要到什麼程度？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -918,7 +1111,7 @@ footer code { font-size: 12px; color: #64748b; }
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">4</span>
           <span class="qa-text">AI（尤其 LLM）會讓工程師被取代嗎？我現在學的畢業還有用嗎？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -926,49 +1119,58 @@ footer code { font-size: 12px; color: #64748b; }
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">5</span>
           <span class="qa-text">要不要唸研究所？直接工作 vs 讀碩士，投資報酬率差多少？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <div class="qa-body">台灣本土市場：碩士通常初薪高 10–20%，且在大公司的晉升速度較快。但實作能力強的大學生也能追上。如果想做研究、走 AI/ML、或出國，讀碩士投資報酬較明顯。如果目標是盡早累積工作經驗，大學畢業直接進好公司也是好選項。另外要注意的是，大部分公司在投履歷、初步篩選階段，還是會參考學校、學歷來做基礎的薪資判斷；當然不是絕對，實力強到不看學歷的人也大有人在，但在「第一輪投履歷」的階段，學歷確實容易造成基礎薪資上的差異。</div>
       </li>
     </ul>
+      </div>
+    </details>
 
-    <h3>C. 關於心態與現實</h3>
+    <details class="subsec" id="s4-c">
+      <summary>
+        <svg class="subsec-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <h3>C. 關於心態與現實</h3>
+      </summary>
+      <div class="subsec-body">
     <ul class="qa-list">
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">1</span>
           <span class="qa-text">我不是從小寫程式，起步較晚，來得及嗎？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="qa-body">幾乎一定來得及。大多數資工系同學大一入學前都沒有大量寫程式的經歷。真正重要的是進來之後是否願意投入，而不是起點在哪裡。</div>
+        <div class="qa-body">肯定來得及，我本身也不是資工系出身。真正重要的是進入這個領域是否願意投入，而不是起點在哪裡。工程師是一個知識密集的產業，技術、AI 發展天天在變，怎麼學習以及善用 AI 才是關鍵。但無論如何，基礎知識還是非常重要的。</div>
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">2</span>
           <span class="qa-text">我不喜歡寫 code，資工系還有別的出路嗎？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="qa-body">有很多出路：PM（產品經理）、資料分析、資安顧問、UI/UX 設計、技術業務（Sales Engineer）、技術寫手。資工背景讓你在這些職位有比文組更強的技術理解力，是優勢而非包袱。</div>
+        <div class="qa-body">有很多出路：PM（產品經理）、資料分析、資安顧問、UI/UX 設計、技術業務（Sales Engineer）、技術寫手。資工背景會讓你在評估功能實作方式或工作範圍時，比文組背景多一份技術理解力，判斷也更貼近實務。這就像判斷「煎一顆蛋要多久」——因為你曾經煎過，知道大概要 5 分鐘左右；這種實作經驗，會比完全沒背景的人更有優勢。</div>
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">3</span>
           <span class="qa-text">怎麼分辨「一時的熱門」跟「長期有價值的能力」？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="qa-body">一個簡單標準：「這個能力 10 年後還適用嗎？」演算法思維、系統設計、溝通能力、學習速度——這些不退流行。某個特定框架或語言可能 5 年後換了，但底層邏輯不變。</div>
+        <div class="qa-body">一個簡單標準：「這個能力 10 年後還適用嗎？」演算法思維、系統設計、溝通能力、學習速度——這些不退流行。某個特定框架或語言可能 5 年後換了，但底層邏輯不變。另外也可以去各大遊戲徵才公司職缺下搜集現在公司到底是需要哪些技能類型的人，來確保自己未來在市場是有競爭力的。</div>
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">Q</span>
+          <span class="qa-badge">4</span>
           <span class="qa-text">大學四年如果只能做對三件事，會是哪三件？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <div class="qa-body">① 打好演算法與系統基礎（這是往後一切的底座）；② 做一個真實的 side project 並放上 GitHub（讓外人看到你的能力）；③ 找到至少一次實習（了解真實工作，比課程有效 10 倍）。其餘的——GPA、競賽、社團——都是加分，不是必要條件。</div>
       </li>
     </ul>
+      </div>
+    </details>
   </section>
 
   <!-- ─── Section 5 ─── -->
@@ -1029,14 +1231,6 @@ window.addEventListener('scroll', () => {
   bar.style.width = (scrollY / total * 100) + '%';
 }, {passive: true});
 
-/* ── Topnav 出現時機（捲過 TOC card 後才顯示） ── */
-const topnav = document.getElementById('topnav');
-const toc = document.querySelector('.toc-card');
-const tocObs = new IntersectionObserver(([e]) => {
-  topnav.classList.toggle('visible', !e.isIntersecting);
-}, {threshold: 0});
-if(toc) tocObs.observe(toc);
-
 /* ── Topnav active pill（Intersection Observer） ── */
 const sections = document.querySelectorAll('section[id]');
 const pills = document.querySelectorAll('#topnav .nav-pill');
@@ -1083,6 +1277,51 @@ document.querySelectorAll('.qa-q').forEach(q => {
     if(!wasOpen) item.classList.add('open');
   });
 });
+
+/* ── 頂部 nav 子選單（點擊切換，供觸控裝置使用） ── */
+document.querySelectorAll('#topnav .nav-caret').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const wrap = btn.closest('.nav-pill-wrap');
+    const wasOpen = wrap.classList.contains('dd-open');
+    document.querySelectorAll('#topnav .nav-pill-wrap').forEach(w => {
+      w.classList.remove('dd-open');
+      w.querySelector('.nav-caret')?.setAttribute('aria-expanded', 'false');
+    });
+    if(!wasOpen){
+      wrap.classList.add('dd-open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+document.addEventListener('click', e => {
+  if(!e.target.closest('.nav-pill-wrap')){
+    document.querySelectorAll('#topnav .nav-pill-wrap').forEach(w => {
+      w.classList.remove('dd-open');
+      w.querySelector('.nav-caret')?.setAttribute('aria-expanded', 'false');
+    });
+  }
+});
+document.querySelectorAll('#topnav .nav-dropdown a').forEach(a => {
+  a.addEventListener('click', () => {
+    a.closest('.nav-pill-wrap')?.classList.remove('dd-open');
+  });
+});
+
+/* ── 小標題收合區塊：跳轉錨點時自動展開並捲動 ── */
+function openSubsecFromHash(){
+  const id = decodeURIComponent(location.hash.slice(1));
+  if(!id) return;
+  const target = document.getElementById(id);
+  if(!target) return;
+  const details = target.closest('details.subsec');
+  if(details && !details.open){
+    details.open = true;
+    requestAnimationFrame(() => target.scrollIntoView({block: 'start'}));
+  }
+}
+window.addEventListener('hashchange', openSubsecFromHash);
+if(location.hash) openSubsecFromHash();
 </script>
 </body>
 </html>
