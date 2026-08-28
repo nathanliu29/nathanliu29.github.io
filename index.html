@@ -360,6 +360,7 @@ tbody tr.active { background: #bfdbfe !important; outline: 2px solid var(--brand
 .skill-card:hover { box-shadow: 0 6px 20px rgba(37,99,235,.1); transform: translateY(-2px); }
 .skill-card h4 { font-size: 15px; font-weight: 700; color: var(--brand-d); margin-bottom: 6px; }
 .skill-card p  { font-size: 14px; color: var(--muted); flex: 1; }
+.skill-card .book-author { font-size: 12px; color: var(--sub); font-weight: 600; flex: 0 0 auto; margin: -4px 0 6px; }
 .skill-card .links { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
 .skill-card .links a { display: block; font-size: 13px; color: var(--brand); margin: 3px 0; }
 .skill-card .links a::before { content: "→ "; opacity: .5; }
@@ -482,35 +483,42 @@ footer code { font-size: 12px; color: #64748b; }
    PDF 匯出頁（僅列印 / 產生 PDF 時顯示）
 ══════════════════════════════════ */
 #pdf-export { display: none; }
-#pdf-export .pdf-header { text-align: center; margin-bottom: 6pt; padding-bottom: 5pt; border-bottom: 2px solid var(--brand); }
-#pdf-export .pdf-header h1 { font-size: 14pt; font-weight: 800; color: var(--ink); margin-bottom: 2pt; }
-#pdf-export .pdf-header p { font-size: 8pt; color: var(--muted); }
-#pdf-export .pdf-sec { margin-bottom: 5pt; break-inside: avoid; }
+#pdf-export .pdf-header {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 10pt;
+  margin-bottom: 4pt; padding-bottom: 4pt; border-bottom: 2px solid var(--brand);
+}
+#pdf-export .pdf-header-text { flex: 1; text-align: center; }
+#pdf-export .pdf-header h1 { font-size: 16px; font-weight: 800; color: var(--ink); margin-bottom: 2pt; }
+#pdf-export .pdf-header-text p { font-size: 11px; color: var(--muted); }
+#pdf-export .pdf-qr { flex-shrink: 0; text-align: center; }
+#pdf-export .pdf-qr img { width: 38pt; height: 38pt; display: block; }
+#pdf-export .pdf-qr span { display: block; margin-top: 1pt; font-size: 8px; color: var(--muted); white-space: nowrap; }
+#pdf-export .pdf-sec { margin-bottom: 4pt; break-inside: avoid; }
 #pdf-export .pdf-sec h2 {
-  font-size: 10pt; font-weight: 800; color: #fff; background: var(--brand);
+  font-size: 12px; font-weight: 800; color: #fff; background: var(--brand);
   padding: 2pt 8pt; border-radius: 4pt; margin-bottom: 4pt; display: inline-block;
 }
 #pdf-export .pdf-diagram { text-align: center; margin: 2pt 0; }
 #pdf-export .pdf-diagram img { width: 100%; max-width: 490pt; height: auto; display: inline-block; }
-#pdf-export .pdf-note { font-size: 7.5pt; color: var(--muted); margin-bottom: 3pt; }
-#pdf-export .pdf-list { list-style: none; font-size: 8.5pt; line-height: 1.4; }
+#pdf-export .pdf-note { font-size: 10px; color: var(--muted); margin-bottom: 3pt; }
+#pdf-export .pdf-list { list-style: none; font-size: 11px; line-height: 1.4; }
 #pdf-export .pdf-list li { margin-bottom: 2pt; }
 #pdf-export .pdf-list b { color: var(--brand-d); }
-#pdf-export table.pdf-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
+#pdf-export table.pdf-table { width: 100%; border-collapse: collapse; font-size: 11px; }
 #pdf-export table.pdf-table th {
   background: var(--soft); color: var(--sub); text-align: left;
   padding: 2pt 6pt; font-weight: 700; border: 1px solid var(--line);
 }
 #pdf-export table.pdf-table td { padding: 2pt 6pt; border: 1px solid var(--line); vertical-align: top; }
-#pdf-export .pdf-qa-q { font-size: 9pt; font-weight: 700; color: var(--brand-d); margin-bottom: 2pt; }
-#pdf-export .pdf-answer { font-size: 8.5pt; line-height: 1.4; color: var(--sub); text-align: justify; }
+#pdf-export .pdf-qa-q { font-size: 12px; font-weight: 700; color: var(--brand-d); margin-bottom: 2pt; }
+#pdf-export .pdf-answer { font-size: 11px; line-height: 1.4; color: var(--sub); text-align: justify; }
 #pdf-export .pdf-principles { display: flex; gap: 8pt; }
 #pdf-export .pdf-principles > div {
-  flex: 1; border: 1px solid var(--line); border-radius: 5pt; padding: 4pt 8pt;
+  flex: 1; border: 1px solid var(--line); border-radius: 5pt; padding: 3pt 8pt;
 }
-#pdf-export .pdf-principles b { display: block; font-size: 9pt; color: var(--brand-d); margin-bottom: 2pt; }
-#pdf-export .pdf-principles span { font-size: 8pt; color: var(--muted); line-height: 1.35; }
-#pdf-export .pdf-footer { margin-top: 3pt; padding-top: 3pt; border-top: 1px solid var(--line); font-size: 7pt; color: var(--muted); text-align: center; }
+#pdf-export .pdf-principles b { display: block; font-size: 12px; color: var(--brand-d); margin-bottom: 2pt; }
+#pdf-export .pdf-principles span { font-size: 10px; color: var(--muted); line-height: 1.35; }
+#pdf-export .pdf-footer { margin-top: 3pt; padding-top: 3pt; border-top: 1px solid var(--line); font-size: 10px; color: var(--muted); text-align: center; }
 
 /* ══════════════════════════════════
    Responsive
@@ -534,7 +542,7 @@ footer code { font-size: 12px; color: #64748b; }
   .skills-grid { grid-template-columns: 1fr; }
 }
 @media print {
-  @page { size: A4; margin: 8mm 8mm 5mm; }
+  @page { size: A4; margin: 8mm 8mm 3mm; }
   #progress, #topnav { display: none; }
   .qa-body { max-height: none !important; padding: 10px 16px 14px 50px !important; }
   .card:hover, .skill-card:hover, .principle:hover { transform: none; box-shadow: none; }
@@ -699,6 +707,8 @@ footer code { font-size: 12px; color: #64748b; }
       <a href="#s8-money">金流與分潤</a>
     </div>
   </div>
+  <div class="nav-sep"></div>
+  <a href="#s9" class="nav-pill"><span class="dot"></span>推薦書籍</a>
 
   <button type="button" id="pdf-export-btn" class="nav-pdf-btn" title="產生重點摘錄 PDF（職能架構圖／必備技能／遊戲學習資源／B-5／三個判斷原則）">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h9l3 3v4"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
@@ -787,6 +797,9 @@ footer code { font-size: 12px; color: #64748b; }
           <li><a href="#s8-players">知名廠商角色對照表</a></li>
           <li><a href="#s8-money">金流與分潤 · 台灣定位</a></li>
         </ul>
+      </div>
+      <div class="toc-block">
+        <a href="#s9" class="toc-item"><span class="toc-num">9</span>推薦書籍：軟實力與思考框架</a>
       </div>
     </div>
   </nav>
@@ -1417,7 +1430,7 @@ footer code { font-size: 12px; color: #64748b; }
       <div class="subsec-body">
     <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">遊戲產業正大量導入 AI（美術生成、NPC 對話、關卡設計輔助等），以下分享兩則相關動態與練習資源。</p>
     <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:flex-start;">
-      <iframe src="./台灣純軟體業工作與就學進修分析報告 v5（含台清交成四校資工所研究領域）_files/post.html" width="500" height="733" style="border:none;overflow:hidden;max-width:100%;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+      <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fmannyyhl%2Fposts%2Fpfbid02aQLSsMMiXFvgmney7uZByFtAfEEGiPGq26apES2XjruFusUHtQqedeZKnKCtjpThl&show_text=true&width=500" width="500" height="733" style="border:none;overflow:hidden;max-width:100%;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
       <div class="skill-card" style="max-width:500px;flex:1 1 320px;">
         <h4>遊戲相關程式題目練習</h4>
         <p>裡面有一些很初階的題目可以嘗試，適合入門者練手感。</p>
@@ -1529,7 +1542,7 @@ footer code { font-size: 12px; color: #64748b; }
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">4</span>
+          <span class="qa-badge" style="background-color:burlywood">4</span>
           <span class="qa-text">AI（尤其 LLM）會讓工程師被取代嗎？我現在學的畢業還有用嗎？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
@@ -1537,7 +1550,7 @@ footer code { font-size: 12px; color: #64748b; }
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">5</span>
+          <span class="qa-badge" style="background-color:burlywood">5</span>
           <span class="qa-text">AI Agent 及其他應用對軟體業的影響？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
@@ -1545,7 +1558,7 @@ footer code { font-size: 12px; color: #64748b; }
       </li>
       <li class="qa-item">
         <div class="qa-q">
-          <span class="qa-badge">6</span>
+          <span class="qa-badge" style="background-color:burlywood">6</span>
           <span class="qa-text">LLM、AI Agent、RAG 有什麼差異？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
@@ -1637,7 +1650,7 @@ footer code { font-size: 12px; color: #64748b; }
     </div>
 
     <div class="card">
-      <p>這份題目原本依「團隊、美術、程式、遊戲設計、劇情」五個職能分類，但其實很適合當成一份「一款遊戲是怎麼被做出來、驗證、賣出去」的入門指南。每一題都附上：<b>簡答</b>（先讓完全沒有業界經驗的人理解）、<b>可以想想</b>（幫助理解這題背後真正在問什麼，不是每題都有）、<b>References</b>（每題 1～3 個，盡量是官方或業界一手資料，方便進一步查證）。</p>
+      <p>每一題都附上：<b>簡答</b>（先讓完全沒有業界經驗的人理解）、<b>可以想想</b>（幫助理解這題背後真正在問什麼，不是每題都有）、<b>References</b>（每題 1～3 個，盡量是官方或業界一手資料，方便進一步查證）。</p>
     </div>
 
     <details class="subsec" id="s7-path" open="">
@@ -1708,7 +1721,7 @@ footer code { font-size: 12px; color: #64748b; }
 
           <li class="qa-item" id="q1">
             <div class="qa-q">
-              <span class="qa-badge">1</span>
+              <span class="qa-badge" style="background-color:burlywood">1</span>
               <span class="qa-text">意見不同時，投票還是說服？</span>
               <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
@@ -1721,7 +1734,7 @@ footer code { font-size: 12px; color: #64748b; }
 
           <li class="qa-item" id="q2">
             <div class="qa-q">
-              <span class="qa-badge">2</span>
+              <span class="qa-badge" style="background-color:burlywood">2</span>
               <span class="qa-text">成員各司其職還是會互相協助？</span>
               <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
@@ -1734,7 +1747,7 @@ footer code { font-size: 12px; color: #64748b; }
 
           <li class="qa-item" id="q3">
             <div class="qa-q">
-              <span class="qa-badge">3</span>
+              <span class="qa-badge" style="background-color:burlywood !important">3</span>
               <span class="qa-text">成員效率不佳時如何處理（薪資層面外）？</span>
               <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
@@ -1747,7 +1760,7 @@ footer code { font-size: 12px; color: #64748b; }
 
           <li class="qa-item" id="q4">
             <div class="qa-q">
-              <span class="qa-badge">4</span>
+              <span class="qa-badge" style="background-color:burlywood">4</span>
               <span class="qa-text">怎麼判斷一個專案應該被捨棄？</span>
               <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
@@ -1842,7 +1855,7 @@ footer code { font-size: 12px; color: #64748b; }
 
           <li class="qa-item" id="q11">
             <div class="qa-q">
-              <span class="qa-badge">11</span>
+              <span class="qa-badge" style="background-color:burlywood">11</span>
               <span class="qa-text">遊戲產業的未來光景如何？</span>
               <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
@@ -1919,7 +1932,7 @@ footer code { font-size: 12px; color: #64748b; }
 
           <li class="qa-item" id="q16">
             <div class="qa-q">
-              <span class="qa-badge">16</span>
+              <span class="qa-badge" style="background-color:burlywood">16</span>
               <span class="qa-text">如何決定什麼東西需要外包？</span>
               <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
@@ -1934,7 +1947,7 @@ footer code { font-size: 12px; color: #64748b; }
 
           <li class="qa-item" id="q17">
             <div class="qa-q">
-              <span class="qa-badge">17</span>
+              <span class="qa-badge" style="background-color:burlywood">17</span>
               <span class="qa-text">外包的品質控管怎麼做？</span>
               <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
@@ -2107,7 +2120,7 @@ footer code { font-size: 12px; color: #64748b; }
 
           <li class="qa-item" id="q29">
             <div class="qa-q">
-              <span class="qa-badge">29</span>
+              <span class="qa-badge" style="background-color:burlywood">29</span>
               <span class="qa-text">怎麼測試遊戲好玩與否？標準又在哪？</span>
               <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
@@ -2465,13 +2478,74 @@ footer code { font-size: 12px; color: #64748b; }
     </details>
   </section>
 
+  <!-- ─── Section 9 ─── -->
+  <section id="s9">
+    <div class="sec-header" data-num="09">
+      <div class="sec-header-inner">
+        <div class="sec-num">09</div>
+        <div class="sec-title">
+          <h2>推薦書籍：軟實力與思考框架</h2>
+          <p>技術之外，補齊判斷力、溝通力與解決問題框架的書單</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p>技術會被 AI 加速取代或加速學習，但<b>做人做事的判斷力、溝通協商的能力、拆解問題的框架</b>，是更長期、更難被取代的軟實力。以下書單不分順序，挑一本你現在最有感的開始讀就好。</p>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h4>大人學做事做人</h4>
+        <p class="book-author">張國洋（Joe）、姚詩豪（Bryan）</p>
+        <p>職場溝通與待人處事的實用心法，幫助新鮮人少走冤枉路。</p>
+      </div>
+      <div class="skill-card">
+        <h4>與成功有約</h4>
+        <p class="book-author">史蒂芬．柯維、西恩．柯維</p>
+        <p>談個人習慣與自我成長根本原則的經典之作。</p>
+      </div>
+      <div class="skill-card">
+        <h4>原子習慣</h4>
+        <p class="book-author">詹姆斯．克利爾（James Clear）</p>
+        <p>用微小習慣的複利效應，說明如何打造長期、可持續的改變。</p>
+      </div>
+      <div class="skill-card">
+        <h4>FBI 教你學談判</h4>
+        <p class="book-author">克里斯．佛斯（Chris Voss）</p>
+        <p>前 FBI 首席人質談判專家分享的實戰協商技巧。</p>
+      </div>
+      <div class="skill-card">
+        <h4>劉必榮談判精華課</h4>
+        <p class="book-author">劉必榮</p>
+        <p>台灣談判學者的協商思維與實務應用課程。</p>
+      </div>
+      <div class="skill-card">
+        <h4>BCG 問題解決力</h4>
+        <p class="book-author">徐瑞廷</p>
+        <p>顧問業界拆解複雜問題、找出解方的思考框架。</p>
+      </div>
+      <div class="skill-card">
+        <h4>灰階思考</h4>
+        <p class="book-author">謝孟恭（股癌）</p>
+        <p>訓練跳脫二元對立、辨識灰色地帶的思辨與表達能力。</p>
+      </div>
+    </div>
+  </section>
+
 </div><!-- /container -->
 
 <!-- ─── PDF 匯出摘錄頁（平常隱藏，點擊「產生 PDF」時才列印） ─── -->
 <div id="pdf-export">
   <div class="pdf-header">
-    <h1>台灣純軟體業工作與就學進修分析報告 — 重點摘錄</h1>
-    <p>職能堆疊架構圖 · 通用必備技能與學習資源 · 遊戲相關學習資源 · B-5 問題 · 給大學新鮮人的三個判斷原則</p>
+    <div class="pdf-header-text">
+      <h1>台灣純軟體業工作與就學進修分析報告 — 重點摘錄</h1>
+      <p>職能堆疊架構圖 · 通用必備技能與學習資源 · 遊戲相關學習資源 · B-5 問題 · 給大學新鮮人的三個判斷原則</p>
+    </div>
+    <div class="pdf-qr">
+      <img src="data:image/png;base64,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3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AEPO673upWbd9eZLrPJYnGdnfWWtVPJMjazXrfWfN+WlrNaK4zlfwH+vmDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAxr/u+pwy8bvvHz17nsdSMvO8ss9b5aWtVfN+i4nmeda6e9o+9gu/r5g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMa/7vpeadds/fvY6D+P+8XUeMTLnEbPed8TTvqPiuZrF/v79M+nmDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx71kDr9v+8bPXefyrc/nr4z5tnUfMmvPIOs963+L+Ps3IHo2cyeJ/Y530Dc7i5g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMe9ZA1/nMWXcddunzHlk3BHm/DtrVVznWePOUvz2i/8NfoebNwDEiDcAxIg3AMSINwDEiDcAxIg3AMSINwDEiDcAxIg3AMSINwDEiDcAxIg3AMSINwDEiDcAxIg3AMSINwDEiDcAxIg3AMSINwDEvO77njLwuu0fP3udx5Rxn2ZknYtno6j4HRX3yH/j55yr3+HmDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx4g0AMeINADHiDQAx71kDX+fxqHGfZt322VN4xFqNnGd79DuK/5zi2VgnzXnW/rp5A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0DMe9bA67bPGpofus5jyrMjZ+Np52rW+47s76z3nTXnEU9731n/jSu4Vm7eABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABDzXoKu85g9hYx123PjztrfWXO2Vt/9LTztX1dc5zX4v3LzBoAY8QaAGPEGgBjxBoAY8QaAGPEGgBjxBoAY8QaAGPEGgBjxBoAY8QaAGPEGgBjxBoAY8QaAGPEGgBjxBoAY8QaAGPEGgBjxBoCY9/Iw67YvNdd5LE+a86w9mrXOxbUaMTLnWXs0MufiHo0o7tEV/Me6eQNAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAzHv2BPhO67Z//Ox1HlPGnaU45xEj+1s8k087G7PmfE36b8w6G27eABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABDznj0BvtN1Hh8/u277lHFHjMx5lllrxc85z/wvbt4AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AEPNeHuY6j9lT4Av3aGTO67YvNcU5P22Pnvb9rgN7VPznuHkDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQIx4A0CMeANAjHgDQMx7CVq3ffYU+D/u0XUejzobs97XHv19s85GcdyncfMGgBjxBoAY8QaAGPEGgBjxBoAY8QaAGPEGgBjxBoAY8QaAGPEGgBjxBoAY8QaAGPEGgBjxBoAY8QaAGPEGgBjxBoAY8QaAGPEGgJjXfd+z5wAA/ANu3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeABAj3gAQI94AECPeALC0/BcT4Ug99Xe0bwAAAABJRU5ErkJggg==" alt="網頁 QR Code" width="660" height="660">
+      <span>nathanliu29.github.io</span>
+    </div>
   </div>
 
   <section class="pdf-sec">
