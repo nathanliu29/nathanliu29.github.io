@@ -48,6 +48,26 @@ a:hover { text-decoration: underline; }
 }
 
 /* ══════════════════════════════════
+   回到頂端按鈕
+══════════════════════════════════ */
+#back-to-top {
+  position: fixed; right: 24px; bottom: 24px; z-index: 250;
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: var(--brand); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 20px rgba(37,99,235,.35);
+  cursor: pointer; font-family: inherit;
+  opacity: 0; visibility: hidden; transform: translateY(12px);
+  transition: opacity .2s, transform .2s, visibility .2s, background .15s;
+}
+#back-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+#back-to-top:hover { background: var(--brand-d); }
+@media print { #back-to-top { display: none !important; } }
+@media (max-width: 700px) {
+  #back-to-top { right: 16px; bottom: 16px; width: 40px; height: 40px; }
+}
+
+/* ══════════════════════════════════
    頂部 Sticky Nav
 ══════════════════════════════════ */
 #topnav {
@@ -374,6 +394,7 @@ tbody tr.active { background: #bfdbfe !important; outline: 2px solid var(--brand
 .qa-item {
   background: var(--card); border: 1px solid var(--line);
   border-radius: 12px; margin: 8px 0; overflow: hidden;
+  scroll-margin-top: calc(var(--nav-h) + 16px);
   transition: box-shadow .2s;
 }
 .qa-item:hover { box-shadow: 0 4px 16px rgba(15,23,42,.07); }
@@ -613,85 +634,90 @@ footer code { font-size: 12px; color: #64748b; }
 <!-- 進度條 -->
 <div id="progress" style="width: 0%;"></div>
 
+<!-- 回到頂端 -->
+<button type="button" id="back-to-top" aria-label="回到頂端">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+</button>
+
 <!-- 頂部 Sticky Nav -->
 <nav id="topnav" aria-label="章節導航">
   <div class="nav-pill-wrap">
-    <a href="https://nathanliu29.github.io/#s1" class="nav-pill active"><span class="dot"></span>工作選擇</a>
+    <a href="#s1" class="nav-pill active"><span class="dot"></span>工作選擇</a>
     <button type="button" class="nav-caret" aria-label="展開「工作選擇」子項目" aria-expanded="false">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </button>
     <div class="nav-dropdown">
-      <a href="https://nathanliu29.github.io/#s1-diagram">職能堆疊架構圖</a>
-      <a href="https://nathanliu29.github.io/#s1-roles">依「職能」分類的職位</a>
-      <a href="https://nathanliu29.github.io/#s1-industries">依「產業」分類</a>
+      <a href="#s1-diagram">職能堆疊架構圖</a>
+      <a href="#s1-roles">依「職能」分類的職位</a>
+      <a href="#s1-industries">依「產業」分類</a>
     </div>
   </div>
   <div class="nav-sep"></div>
   <div class="nav-pill-wrap">
-    <a href="https://nathanliu29.github.io/#s2" class="nav-pill"><span class="dot"></span>就學進修</a>
+    <a href="#s2" class="nav-pill"><span class="dot"></span>就學進修</a>
     <button type="button" class="nav-caret" aria-label="展開「就學進修」子項目" aria-expanded="false">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </button>
     <div class="nav-dropdown">
-      <a href="https://nathanliu29.github.io/#s2-univ">大學階段（本科）</a>
-      <a href="https://nathanliu29.github.io/#s2-grad">研究所 / 進修方向</a>
+      <a href="#s2-univ">大學階段（本科）</a>
+      <a href="#s2-grad">研究所 / 進修方向</a>
     </div>
   </div>
   <div class="nav-sep"></div>
   <div class="nav-pill-wrap">
-    <a href="https://nathanliu29.github.io/#s6" class="nav-pill"><span class="dot"></span>四校資工所</a>
+    <a href="#s6" class="nav-pill"><span class="dot"></span>四校資工所</a>
     <button type="button" class="nav-caret" aria-label="展開「四校資工所」子項目" aria-expanded="false">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </button>
     <div class="nav-dropdown">
-      <a href="https://nathanliu29.github.io/#s6-ntu">台大 NTU（七大領域）</a>
-      <a href="https://nathanliu29.github.io/#s6-nthu">清大 NTHU（五大群）</a>
-      <a href="https://nathanliu29.github.io/#s6-nycu">陽明交大 NYCU（研究領域）</a>
-      <a href="https://nathanliu29.github.io/#s6-ncku">成大 NCKU（研究領域）</a>
-      <a href="https://nathanliu29.github.io/#s6-compare">跨校研究領域 × 出路總表</a>
-      <a href="https://nathanliu29.github.io/#s6-exam">招生分組、考科與實驗室查找</a>
+      <a href="#s6-ntu">台大 NTU（七大領域）</a>
+      <a href="#s6-nthu">清大 NTHU（五大群）</a>
+      <a href="#s6-nycu">陽明交大 NYCU（研究領域）</a>
+      <a href="#s6-ncku">成大 NCKU（研究領域）</a>
+      <a href="#s6-compare">跨校研究領域 × 出路總表</a>
+      <a href="#s6-exam">招生分組、考科與實驗室查找</a>
     </div>
   </div>
   <div class="nav-sep"></div>
   <div class="nav-pill-wrap">
-    <a href="https://nathanliu29.github.io/#s3" class="nav-pill"><span class="dot"></span>入門指南</a>
+    <a href="#s3" class="nav-pill"><span class="dot"></span>入門指南</a>
     <button type="button" class="nav-caret" aria-label="展開「入門指南」子項目" aria-expanded="false">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </button>
     <div class="nav-dropdown">
-      <a href="https://nathanliu29.github.io/#s3-langs">程式語言與技術簡介</a>
-      <a href="https://nathanliu29.github.io/#s3-skills">通用必備技能與學習資源</a>
-      <a href="https://nathanliu29.github.io/#s3-game-resources">遊戲相關學習資源</a>
-      <a href="https://nathanliu29.github.io/#s3-news">遊戲相關新聞與 AI 應用</a>
+      <a href="#s3-langs">程式語言與技術簡介</a>
+      <a href="#s3-skills">通用必備技能與學習資源</a>
+      <a href="#s3-game-resources">遊戲相關學習資源</a>
+      <a href="#s3-news">遊戲相關新聞與 AI 應用</a>
     </div>
   </div>
   <div class="nav-sep"></div>
   <div class="nav-pill-wrap">
-    <a href="https://nathanliu29.github.io/#s4" class="nav-pill"><span class="dot"></span>新生問題</a>
+    <a href="#s4" class="nav-pill"><span class="dot"></span>新生問題</a>
     <button type="button" class="nav-caret" aria-label="展開「新生問題」子項目" aria-expanded="false">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </button>
     <div class="nav-dropdown">
-      <a href="https://nathanliu29.github.io/#s4-a">A. 關於學業與課程</a>
-      <a href="https://nathanliu29.github.io/#s4-b">B. 關於能力養成與職涯</a>
-      <a href="https://nathanliu29.github.io/#s4-c">C. 關於心態與現實</a>
+      <a href="#s4-a">A. 關於學業與課程</a>
+      <a href="#s4-b">B. 關於能力養成與職涯</a>
+      <a href="#s4-c">C. 關於心態與現實</a>
     </div>
   </div>
   <div class="nav-sep"></div>
-  <a href="https://nathanliu29.github.io/#s5" class="nav-pill"><span class="dot"></span>判斷原則</a>
+  <a href="#s5" class="nav-pill"><span class="dot"></span>判斷原則</a>
   <div class="nav-sep"></div>
   <div class="nav-pill-wrap">
-    <a href="https://nathanliu29.github.io/#s7" class="nav-pill"><span class="dot"></span>遊戲產業問題集</a>
+    <a href="#s7" class="nav-pill"><span class="dot"></span>遊戲產業問題集</a>
     <button type="button" class="nav-caret" aria-label="展開「遊戲產業問題集」子項目" aria-expanded="false">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </button>
     <div class="nav-dropdown">
-      <a href="https://nathanliu29.github.io/#s7-path">推薦閱讀順序</a>
-      <a href="https://nathanliu29.github.io/#s7-team">一、團隊</a>
-      <a href="https://nathanliu29.github.io/#s7-art">二、美術</a>
-      <a href="https://nathanliu29.github.io/#s7-program">三、程式</a>
-      <a href="https://nathanliu29.github.io/#s7-design">四、遊戲設計</a>
-      <a href="https://nathanliu29.github.io/#s7-story">五、劇情</a>
+      <a href="#s7-path">推薦閱讀順序</a>
+      <a href="#s7-team">一、團隊</a>
+      <a href="#s7-art">二、美術</a>
+      <a href="#s7-program">三、程式</a>
+      <a href="#s7-design">四、遊戲設計</a>
+      <a href="#s7-story">五、劇情</a>
     </div>
   </div>
   <div class="nav-sep"></div>
@@ -733,60 +759,60 @@ footer code { font-size: 12px; color: #64748b; }
     <h2>目錄 CONTENTS</h2>
     <div class="toc-grid">
       <div class="toc-block">
-        <a href="https://nathanliu29.github.io/#s1" class="toc-item"><span class="toc-num">1</span>台灣純軟體業有哪些工作可選</a>
+        <a href="#s1" class="toc-item"><span class="toc-num">1</span>台灣純軟體業有哪些工作可選</a>
         <ul class="toc-sub">
-          <li><a href="https://nathanliu29.github.io/#s1-diagram">職能堆疊架構圖</a></li>
-          <li><a href="https://nathanliu29.github.io/#s1-roles">依「職能」分類的職位</a></li>
-          <li><a href="https://nathanliu29.github.io/#s1-industries">依「產業」分類</a></li>
+          <li><a href="#s1-diagram">職能堆疊架構圖</a></li>
+          <li><a href="#s1-roles">依「職能」分類的職位</a></li>
+          <li><a href="#s1-industries">依「產業」分類</a></li>
         </ul>
       </div>
       <div class="toc-block">
-        <a href="https://nathanliu29.github.io/#s2" class="toc-item"><span class="toc-num">2</span>就學與進修可考慮的科系</a>
+        <a href="#s2" class="toc-item"><span class="toc-num">2</span>就學與進修可考慮的科系</a>
         <ul class="toc-sub">
-          <li><a href="https://nathanliu29.github.io/#s2-univ">大學階段（本科）</a></li>
-          <li><a href="https://nathanliu29.github.io/#s2-grad">研究所 / 進修方向</a></li>
+          <li><a href="#s2-univ">大學階段（本科）</a></li>
+          <li><a href="#s2-grad">研究所 / 進修方向</a></li>
         </ul>
       </div>
       <div class="toc-block">
-        <a href="https://nathanliu29.github.io/#s6" class="toc-item"><span class="toc-num">3</span>台清交成四校資工所：研究領域 × 出路</a>
+        <a href="#s6" class="toc-item"><span class="toc-num">3</span>台清交成四校資工所：研究領域 × 出路</a>
         <ul class="toc-sub">
-          <li><a href="https://nathanliu29.github.io/#s6-ntu">台大 NTU（七大領域）</a></li>
-          <li><a href="https://nathanliu29.github.io/#s6-nthu">清大 NTHU（五大群）</a></li>
-          <li><a href="https://nathanliu29.github.io/#s6-nycu">陽明交大 NYCU（研究領域）</a></li>
-          <li><a href="https://nathanliu29.github.io/#s6-ncku">成大 NCKU（研究領域）</a></li>
-          <li><a href="https://nathanliu29.github.io/#s6-compare">跨校研究領域 × 出路總表</a></li>
-          <li><a href="https://nathanliu29.github.io/#s6-exam">招生分組、考科與實驗室查找</a></li>
+          <li><a href="#s6-ntu">台大 NTU（七大領域）</a></li>
+          <li><a href="#s6-nthu">清大 NTHU（五大群）</a></li>
+          <li><a href="#s6-nycu">陽明交大 NYCU（研究領域）</a></li>
+          <li><a href="#s6-ncku">成大 NCKU（研究領域）</a></li>
+          <li><a href="#s6-compare">跨校研究領域 × 出路總表</a></li>
+          <li><a href="#s6-exam">招生分組、考科與實驗室查找</a></li>
         </ul>
       </div>
       <div class="toc-block">
-        <a href="https://nathanliu29.github.io/#s3" class="toc-item"><span class="toc-num">4</span>入門指南：語言、技能與資源</a>
+        <a href="#s3" class="toc-item"><span class="toc-num">4</span>入門指南：語言、技能與資源</a>
         <ul class="toc-sub">
-          <li><a href="https://nathanliu29.github.io/#s3-langs">程式語言與技術簡介</a></li>
-          <li><a href="https://nathanliu29.github.io/#s3-skills">通用必備技能與學習資源</a></li>
-          <li><a href="https://nathanliu29.github.io/#s3-game-resources">遊戲相關學習資源</a></li>
-          <li><a href="https://nathanliu29.github.io/#s3-news">遊戲相關新聞與 AI 應用</a></li>
+          <li><a href="#s3-langs">程式語言與技術簡介</a></li>
+          <li><a href="#s3-skills">通用必備技能與學習資源</a></li>
+          <li><a href="#s3-game-resources">遊戲相關學習資源</a></li>
+          <li><a href="#s3-news">遊戲相關新聞與 AI 應用</a></li>
         </ul>
       </div>
       <div class="toc-block">
-        <a href="https://nathanliu29.github.io/#s4" class="toc-item"><span class="toc-num">5</span>資工新生會問的問題</a>
+        <a href="#s4" class="toc-item"><span class="toc-num">5</span>資工新生會問的問題</a>
         <ul class="toc-sub">
-          <li><a href="https://nathanliu29.github.io/#s4-a">A. 關於學業與課程</a></li>
-          <li><a href="https://nathanliu29.github.io/#s4-b">B. 關於能力養成與職涯</a></li>
-          <li><a href="https://nathanliu29.github.io/#s4-c">C. 關於心態與現實</a></li>
+          <li><a href="#s4-a">A. 關於學業與課程</a></li>
+          <li><a href="#s4-b">B. 關於能力養成與職涯</a></li>
+          <li><a href="#s4-c">C. 關於心態與現實</a></li>
         </ul>
       </div>
       <div class="toc-block">
-        <a href="https://nathanliu29.github.io/#s5" class="toc-item"><span class="toc-num">6</span>給大學新鮮人的 3 個判斷原則</a>
+        <a href="#s5" class="toc-item"><span class="toc-num">6</span>給大學新鮮人的 3 個判斷原則</a>
       </div>
       <div class="toc-block">
-        <a href="https://nathanliu29.github.io/#s7" class="toc-item"><span class="toc-num">7</span>遊戲產業入門問題集</a>
+        <a href="#s7" class="toc-item"><span class="toc-num">7</span>遊戲產業入門問題集</a>
         <ul class="toc-sub">
-          <li><a href="https://nathanliu29.github.io/#s7-path">推薦閱讀順序</a></li>
-          <li><a href="https://nathanliu29.github.io/#s7-team">一、團隊</a></li>
-          <li><a href="https://nathanliu29.github.io/#s7-art">二、美術</a></li>
-          <li><a href="https://nathanliu29.github.io/#s7-program">三、程式</a></li>
-          <li><a href="https://nathanliu29.github.io/#s7-design">四、遊戲設計</a></li>
-          <li><a href="https://nathanliu29.github.io/#s7-story">五、劇情</a></li>
+          <li><a href="#s7-path">推薦閱讀順序</a></li>
+          <li><a href="#s7-team">一、團隊</a></li>
+          <li><a href="#s7-art">二、美術</a></li>
+          <li><a href="#s7-program">三、程式</a></li>
+          <li><a href="#s7-design">四、遊戲設計</a></li>
+          <li><a href="#s7-story">五、劇情</a></li>
         </ul>
       </div>
       <div class="toc-block">
@@ -1023,7 +1049,7 @@ footer code { font-size: 12px; color: #64748b; }
       </summary>
       <div class="subsec-body">
     <p style="font-size:14px;color:var(--muted);margin-bottom:10px;">
-      以台大資工系為例，課程資訊來源：<a href="http://140.112.161.31/NTUVoxCourse/index.php/uquery/search?lang=zh" target="_blank">台大課程查詢系統</a>
+      以台大資工系為例，課程資訊來源：<a href="http://140.112.161.31/NTUVoxCourse/index.php/uquery/search?lang=zh" target="_blank" rel="noopener noreferrer">台大課程查詢系統</a>
     </p>
     <div class="table-wrap">
       <table>
@@ -1040,7 +1066,7 @@ footer code { font-size: 12px; color: #64748b; }
           <tr><td><b>大三</b></td><td>計算機系統實驗</td><td>Computer System Laboratory</td><td></td></tr>
           <tr><td><b>大三</b></td><td>計算機網路實驗</td><td>Computer Network Laboratory</td><td></td></tr>
           <tr><td><b>大三</b></td><td>計算機網路</td><td>Computer Networks</td><td></td></tr>
-          <tr><td><b>大三</b></td><td>自動機與形式語言</td><td>Formal Languages and Automata Theory</td><td><a href="https://hackmd.io/YfNr_HT4SlWifnocFZgngg" target="_blank">課程筆記 →</a></td></tr>
+          <tr><td><b>大三</b></td><td>自動機與形式語言</td><td>Formal Languages and Automata Theory</td><td><a href="https://hackmd.io/YfNr_HT4SlWifnocFZgngg" target="_blank" rel="noopener noreferrer">課程筆記 →</a></td></tr>
           <tr><td><b>大三</b></td><td>計算機結構</td><td>Computer Architecture</td><td></td></tr>
         </tbody>
       </table>
@@ -1087,10 +1113,10 @@ footer code { font-size: 12px; color: #64748b; }
     <div class="callout info">
       <span class="callout-icon">📚</span>
       <div><b>研究領域資料來源（官方頁面，查證日 2026-08-11）：</b>
-        <a href="https://www.csie.ntu.edu.tw/zh_tw/AboutUs/About_Us/intro_0" target="_blank">台大 CSIE 概況</a>（七大領域）、
-        <a href="https://dcs.site.nthu.edu.tw/p/404-1174-124575.php" target="_blank">清大 DCS 研究領域</a>（A–E 五大群）、
-        <a href="https://www.cs.nycu.edu.tw/intro/organization/computer-science" target="_blank">陽明交大 CS 組織</a>（研究領域清單）、
-        <a href="https://www.csie.ncku.edu.tw/zh-hant/info/" target="_blank">成大 CSIE 系所簡介</a>（研究發展領域）。
+        <a href="https://www.csie.ntu.edu.tw/zh_tw/AboutUs/About_Us/intro_0" target="_blank" rel="noopener noreferrer">台大 CSIE 概況</a>（七大領域）、
+        <a href="https://dcs.site.nthu.edu.tw/p/404-1174-124575.php" target="_blank" rel="noopener noreferrer">清大 DCS 研究領域</a>（A–E 五大群）、
+        <a href="https://www.cs.nycu.edu.tw/intro/organization/computer-science" target="_blank" rel="noopener noreferrer">陽明交大 CS 組織</a>（研究領域清單）、
+        <a href="https://www.csie.ncku.edu.tw/zh-hant/info/" target="_blank" rel="noopener noreferrer">成大 CSIE 系所簡介</a>（研究發展領域）。
       </div>
     </div>
     <div class="callout warn">
@@ -1331,15 +1357,15 @@ footer code { font-size: 12px; color: #64748b; }
         <h4>台大計算機概論</h4>
         <p>免費公開課，完整建立電腦科學基礎概念，推薦所有入門者。</p>
         <div class="links">
-          <a href="https://www.youtube.com/playlist?list=PLil-R4o6jmGiDc1CC8PyBbasl8kR9r8Wr" target="_blank">于天立教授（YouTube）</a>
-          <a href="https://www.youtube.com/@NTUOCW" target="_blank">NTU OpenCourseWare</a>
+          <a href="https://www.youtube.com/playlist?list=PLil-R4o6jmGiDc1CC8PyBbasl8kR9r8Wr" target="_blank" rel="noopener noreferrer">于天立教授（YouTube）</a>
+          <a href="https://www.youtube.com/@NTUOCW" target="_blank" rel="noopener noreferrer">NTU OpenCourseWare</a>
         </div>
       </div>
       <div class="skill-card">
         <h4>SQL</h4>
         <p>資料庫查詢語言，無論前後端、PM、分析師都會用到。</p>
         <div class="links">
-          <a href="https://www.w3schools.com/sql/" target="_blank">W3Schools SQL</a>
+          <a href="https://www.w3schools.com/sql/" target="_blank" rel="noopener noreferrer">W3Schools SQL</a>
         </div>
       </div>
       <div class="skill-card">
@@ -1350,8 +1376,8 @@ footer code { font-size: 12px; color: #64748b; }
         <h4>Git</h4>
         <p>版本控制，協作開發的基礎，幾乎所有工作都需要。</p>
         <div class="links">
-          <a href="https://w3c.hexschool.com/git/cfdbd310" target="_blank">六角學院 Git 教學</a>
-          <a href="https://gitbook.tw/" target="_blank">為你自己學 Git</a>
+          <a href="https://w3c.hexschool.com/git/cfdbd310" target="_blank" rel="noopener noreferrer">六角學院 Git 教學</a>
+          <a href="https://gitbook.tw/" target="_blank" rel="noopener noreferrer">為你自己學 Git</a>
         </div>
       </div>
     </div>
@@ -1394,30 +1420,30 @@ footer code { font-size: 12px; color: #64748b; }
         <h4>遊戲開發入門</h4>
         <p>對做遊戲有興趣可從 Unity（C#）或 Unreal（C++）入手，先做出簡單小遊戲累積成就感。</p>
         <div class="links">
-          <a href="https://learn.unity.com/" target="_blank">Unity Learn</a>
-          <a href="https://dev.epicgames.com/community/unreal-engine" target="_blank">Unreal Engine 官方教學</a>
+          <a href="https://learn.unity.com/" target="_blank" rel="noopener noreferrer">Unity Learn</a>
+          <a href="https://dev.epicgames.com/community/unreal-engine" target="_blank" rel="noopener noreferrer">Unreal Engine 官方教學</a>
         </div>
       </div>
       <div class="skill-card">
         <h4>Python 入門</h4>
         <p>入門最友善，AI/ML 首選。100 天課程從零帶起。</p>
         <div class="links">
-          <a href="https://github.com/ateliershen/Python-100-Days-zh_TW" target="_blank">Python 100 Days（繁中）</a>
+          <a href="https://github.com/ateliershen/Python-100-Days-zh_TW" target="_blank" rel="noopener noreferrer">Python 100 Days（繁中）</a>
         </div>
       </div>
       <div class="skill-card">
         <h4>Unreal Engine</h4>
         <p>官方最新課程與教學合集，適合想深入 Unreal 引擎開發的人。</p>
         <div class="links">
-          <a href="https://www.unrealengine.com/blog/dive-into-these-brand-new-unreal-engine-courses-and-tutorials?lang=zh-CN" target="_blank">官方部落格：最新課程與教學</a>
-          <a href="https://www.youtube.com/playlist?list=PLzJuQEoW0k57KHTAki4mjY9wF6fEvdGC_" target="_blank">YouTube 教學播放清單</a>
+          <a href="https://www.unrealengine.com/blog/dive-into-these-brand-new-unreal-engine-courses-and-tutorials?lang=zh-CN" target="_blank" rel="noopener noreferrer">官方部落格：最新課程與教學</a>
+          <a href="https://www.youtube.com/playlist?list=PLzJuQEoW0k57KHTAki4mjY9wF6fEvdGC_" target="_blank" rel="noopener noreferrer">YouTube 教學播放清單</a>
         </div>
       </div>
       <div class="skill-card">
         <h4>Unity</h4>
         <p>另一套主流遊戲引擎，適合想快速上手、做出第一個小遊戲的人。</p>
         <div class="links">
-          <a href="https://www.youtube.com/watch?v=vOCCtfZtlzk" target="_blank">YouTube 入門教學</a>
+          <a href="https://www.youtube.com/watch?v=vOCCtfZtlzk" target="_blank" rel="noopener noreferrer">YouTube 入門教學</a>
         </div>
       </div>
     </div>
@@ -1426,14 +1452,10 @@ footer code { font-size: 12px; color: #64748b; }
       <span class="callout-icon">🔗</span>
       <div>
         <b>延伸參考連結：</b>
-        <a href="https://www.threads.com/@cointinuegames" target="_blank">Threads @cointinuegames</a>
+        <a href="https://www.threads.com/@cointinuegames" target="_blank" rel="noopener noreferrer">Threads @cointinuegames</a>
         ・
-        <a href="https://docs.google.com/spreadsheets/d/1FTD4JoJLmWwANOw6O1rHEc3qnqgViYn2ofIokoe0afk/edit?gid=0#gid=0" target="_blank">遊戲開發資源試算表（Google 試算表）</a>
-        ，下方可直接瀏覽試算表內容。
+        <a href="https://docs.google.com/spreadsheets/d/1FTD4JoJLmWwANOw6O1rHEc3qnqgViYn2ofIokoe0afk/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer">遊戲開發資源試算表（Google 試算表）</a>
       </div>
-    </div>
-    <div class="table-wrap" style="margin-top:10px;">
-      <iframe src="https://docs.google.com/spreadsheets/d/1FTD4JoJLmWwANOw6O1rHEc3qnqgViYn2ofIokoe0afk/edit?usp=sharing&amp;rm=minimal&amp;gid=0#gid=0" width="100%" height="480" style="border:none;display:block;" loading="lazy"></iframe>
     </div>
       </div>
     </details>
@@ -1451,7 +1473,7 @@ footer code { font-size: 12px; color: #64748b; }
         <h4>遊戲相關程式題目練習</h4>
         <p>裡面有一些很初階的題目可以嘗試，適合入門者練手感。</p>
         <div class="links">
-          <a href="https://codelove.tw/@tony/post/l3joma#google_vignette" target="_blank">閱讀文章</a>
+          <a href="https://codelove.tw/@tony/post/l3joma#google_vignette" target="_blank" rel="noopener noreferrer">閱讀文章</a>
         </div>
       </div>
     </div>
@@ -1503,7 +1525,7 @@ footer code { font-size: 12px; color: #64748b; }
           <span class="qa-text">大一該先學哪個程式語言？C/C++、Python 還是 Java？</span>
           <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
-        <div class="qa-body">學校通常會安排 C 或 C++ 作為第一門課——跟著學就好，能建立扎實的底層概念。如果課外想自學，Python 是最友善的起點。語言本身不重要，重要的是透過它學習「思考如何解決問題」。現在有 AI 輔助，起步也比以前容易——可以先讓 AI 幫你做一個自己感興趣的 side project，再從裡面開始讀懂、修改，這樣學起來動機強很多。如果對遊戲產業有興趣的話，可以從 C#、C++、Python 先著手，同時研究相關的開發引擎（如 Unity、Unreal），可參考這篇文章：<a href="https://cthr.ctgoodjobs.hk/HRNews/%E9%81%8A%E6%88%B2%E8%A8%AD%E8%A8%88%E5%B8%AB-%E8%81%B7%E6%A5%AD-%E6%8A%80%E8%83%BD-%E6%8A%80%E8%A1%93-%E5%B7%A5%E4%BD%9C%E5%85%A7%E5%AE%B9/45206" target="_blank">遊戲設計師：職業、技能、技術、工作內容</a>。</div>
+        <div class="qa-body">學校通常會安排 C 或 C++ 作為第一門課——跟著學就好，能建立扎實的底層概念。如果課外想自學，Python 是最友善的起點。語言本身不重要，重要的是透過它學習「思考如何解決問題」。現在有 AI 輔助，起步也比以前容易——可以先讓 AI 幫你做一個自己感興趣的 side project，再從裡面開始讀懂、修改，這樣學起來動機強很多。如果對遊戲產業有興趣的話，可以從 C#、C++、Python 先著手，同時研究相關的開發引擎（如 Unity、Unreal），可參考這篇文章：<a href="https://cthr.ctgoodjobs.hk/HRNews/%E9%81%8A%E6%88%B2%E8%A8%AD%E8%A8%88%E5%B8%AB-%E8%81%B7%E6%A5%AD-%E6%8A%80%E8%83%BD-%E6%8A%80%E8%A1%93-%E5%B7%A5%E4%BD%9C%E5%85%A7%E5%AE%B9/45206" target="_blank" rel="noopener noreferrer">遊戲設計師：職業、技能、技術、工作內容</a>。</div>
       </li>
       <li class="qa-item">
         <div class="qa-q">
@@ -1681,42 +1703,42 @@ footer code { font-size: 12px; color: #64748b; }
             <div class="path-num">①</div>
             <div class="path-content">
               <h4>我想做一款遊戲</h4>
-              <p><a href="https://nathanliu29.github.io/#q27">27. 玩法是如何被決定的？</a></p>
+              <p><a href="#q27">27. 玩法是如何被決定的？</a></p>
             </div>
           </li>
           <li class="path-step">
             <div class="path-num">②</div>
             <div class="path-content">
               <h4>我想知道它到底好不好玩</h4>
-              <p><a href="https://nathanliu29.github.io/#q29">29. 怎麼測試遊戲好玩與否？</a>・<a href="https://nathanliu29.github.io/#q30">30. 玩家回饋怎麼過濾？</a>・<a href="https://nathanliu29.github.io/#q31">31. Vertical Slice 要做到什麼狀態？</a></p>
+              <p><a href="#q29">29. 怎麼測試遊戲好玩與否？</a>・<a href="#q30">30. 玩家回饋怎麼過濾？</a>・<a href="#q31">31. Vertical Slice 要做到什麼狀態？</a></p>
             </div>
           </li>
           <li class="path-step">
             <div class="path-num">③</div>
             <div class="path-content">
               <h4>好像真的可以做</h4>
-              <p><a href="https://nathanliu29.github.io/#q2">2. 團隊分工</a>・<a href="https://nathanliu29.github.io/#q18">18. 美術分工</a>・<a href="https://nathanliu29.github.io/#q22">22. 程式分工</a>・<a href="https://nathanliu29.github.io/#q21">21. 多人協作</a></p>
+              <p><a href="#q2">2. 團隊分工</a>・<a href="#q18">18. 美術分工</a>・<a href="#q22">22. 程式分工</a>・<a href="#q21">21. 多人協作</a></p>
             </div>
           </li>
           <li class="path-step">
             <div class="path-num">④</div>
             <div class="path-content">
               <h4>做出來之後，怎麼讓玩家知道？</h4>
-              <p><a href="https://nathanliu29.github.io/#q7">7. 社群經營</a>・<a href="https://nathanliu29.github.io/#q10">10. 開發日誌</a>・<a href="https://nathanliu29.github.io/#q14">14. KOL 合作</a>・<a href="https://nathanliu29.github.io/#q19">19. 美術與行銷</a></p>
+              <p><a href="#q7">7. 社群經營</a>・<a href="#q10">10. 開發日誌</a>・<a href="#q14">14. KOL 合作</a>・<a href="#q19">19. 美術與行銷</a></p>
             </div>
           </li>
           <li class="path-step">
             <div class="path-num">⑤</div>
             <div class="path-content">
               <h4>玩家願意買嗎？</h4>
-              <p><a href="https://nathanliu29.github.io/#q5">5. 商業模式</a>・<a href="https://nathanliu29.github.io/#q8">8. 定價</a>・<a href="https://nathanliu29.github.io/#q9">9. 折扣</a></p>
+              <p><a href="#q5">5. 商業模式</a>・<a href="#q8">8. 定價</a>・<a href="#q9">9. 折扣</a></p>
             </div>
           </li>
           <li class="path-step">
             <div class="path-num">⑥</div>
             <div class="path-content">
               <h4>如果玩家很多，遊戲要怎麼持續？</h4>
-              <p><a href="https://nathanliu29.github.io/#q33">33. 本地化</a>・<a href="https://nathanliu29.github.io/#q23">23. 效能</a>・<a href="https://nathanliu29.github.io/#q24">24. 主機移植</a>・<a href="https://nathanliu29.github.io/#q25">25. 資產版本控管</a></p>
+              <p><a href="#q33">33. 本地化</a>・<a href="#q23">23. 效能</a>・<a href="#q24">24. 主機移植</a>・<a href="#q25">25. 資產版本控管</a></p>
             </div>
           </li>
         </ol>
@@ -2626,7 +2648,7 @@ footer code { font-size: 12px; color: #64748b; }
     <p class="disc">
       本報告由 Claude 協助整理，內容為一般性職涯與就學參考，不構成個別投資、求職或升學之保證。<br>
       v6 = v5 ＋ 新增「遊戲產業鏈：上、中、下游全解析」（Section 08，含產業鏈總覽、上／中／下游角色、台灣與全球知名廠商角色對照表、金流分潤、台灣定位與結構趨勢）。<br>
-      v5 = v4（下載自 <a href="https://nathanliu29.github.io/" target="_blank" style="color:#94a3b8;">nathanliu29.github.io</a>，原 v3.x 純軟體業報告）＋ 合併「台清交成資工所分組分析報告 v2.0」之四校研究領域（Section 03）。四校研究領域引自各校官網（查證日 2026-08-11）。產業鏈分層為「功能角色」分類，企業常橫跨多層；廠商與比例為代表性示例，分潤數字為概略示意，非即時財報。「未來出路」為產業推論，非校方保證。<br>
+      v5 = v4（下載自 <a href="https://nathanliu29.github.io/" target="_blank" rel="noopener noreferrer" style="color:#94a3b8;">nathanliu29.github.io</a>，原 v3.x 純軟體業報告）＋ 合併「台清交成資工所分組分析報告 v2.0」之四校研究領域（Section 03）。四校研究領域引自各校官網（查證日 2026-08-11）。產業鏈分層為「功能角色」分類，企業常橫跨多層；廠商與比例為代表性示例，分潤數字為概略示意，非即時財報。「未來出路」為產業推論，非校方保證。<br>
       版本管理規則：<code>台灣純軟體業工作與就學進修分析報告 v&lt;版號&gt;（…）.html</code>
     </p>
   </div>
@@ -2717,12 +2739,12 @@ document.querySelectorAll('#topnav .nav-dropdown a').forEach(a => {
   });
 });
 
-/* ── 小標題收合區塊：跳轉錨點時自動展開並捲動 ── */
-function openSubsecFromHash(){
-  const id = decodeURIComponent(location.hash.slice(1));
-  if(!id) return;
+/* ── 內部錨點導覽：展開必要的收合區塊，並用單一動作捲動過去 ──
+   （改為攔截點擊、自行 pushState，避免瀏覽器原生「跳到錨點」與
+   我們展開收合區塊的捲動疊加，造成「先跳頂端、再往下捲」的抖動） */
+function goToAnchor(id){
   const target = document.getElementById(id);
-  if(!target) return;
+  if(!target) return false;
   const details = target.closest('details.subsec');
   if(details && !details.open){
     details.open = true;
@@ -2732,9 +2754,36 @@ function openSubsecFromHash(){
     target.classList.add('open');
   }
   requestAnimationFrame(() => target.scrollIntoView({block: 'start'}));
+  return true;
 }
-window.addEventListener('hashchange', openSubsecFromHash);
-if(location.hash) openSubsecFromHash();
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]');
+  if(!a) return;
+  const id = decodeURIComponent(a.getAttribute('href').slice(1));
+  if(!id || !document.getElementById(id)) return;
+  e.preventDefault();
+  if(location.hash !== '#' + id){
+    history.pushState(null, '', '#' + id);
+  }
+  goToAnchor(id);
+});
+
+window.addEventListener('popstate', () => {
+  if(location.hash) goToAnchor(decodeURIComponent(location.hash.slice(1)));
+});
+if(location.hash) goToAnchor(decodeURIComponent(location.hash.slice(1)));
+
+/* ── 回到頂端按鈕 ── */
+const backToTopBtn = document.getElementById('back-to-top');
+if(backToTopBtn){
+  window.addEventListener('scroll', () => {
+    backToTopBtn.classList.toggle('show', window.scrollY > 480);
+  }, {passive: true});
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+}
 
 /* ── 產生 PDF：只列印 #pdf-export 摘錄頁（職能架構圖／必備技能／遊戲學習資源／B-5／三個判斷原則） ── */
 const pdfDateEl = document.getElementById('pdf-date');
